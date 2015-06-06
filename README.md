@@ -31,5 +31,14 @@ newline:
 This is the content.
 ```
 
+## ChangeLog ##
+
+* 2015-06-07: v0.3.0
+  * Added the ability to render the main /index.html file
+* 2015-06-07: v0.2.0
+  * Merge all content into '/content/' instead of '/pages/' and '/posts/'
+* 2015-06-06: v0.1.0
+  * Initial release
+  * Render *.html files for all pages and all posts
 
 (Ends)
