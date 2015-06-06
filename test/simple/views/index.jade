@@ -1,0 +1,6 @@
+extends layout
+
+block content
+  for post in thisPage.posts
+    h2= post.title
+    p= post.published.toISOString()
