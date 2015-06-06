@@ -53,6 +53,18 @@ var postView = jade.compileFile(postViewFilename, {
   pretty   : cfg.pretty || false,
 })
 
+var indexViewFilename = path.join(cfg.viewDir, 'index.jade')
+var indexView = jade.compileFile(indexViewFilename, {
+  filename : indexViewFilename,
+  pretty   : cfg.pretty || false,
+})
+
+var views = {
+  page  : pageView,
+  post  : postView,
+  index : indexView,
+}
+
 // --------------------------------------------------------------------------------------------------------------------
 
 var args = {} // from command line or config file
@@ -65,7 +77,8 @@ async.series(
     readAllContent,
     processContentToSite,
     renderPosts,
-    renderPages
+    renderPages,
+    renderSite
   ],
   finished
 )
@@ -188,7 +201,7 @@ function processContentToSite(done) {
   console.log('page:', site.page)
   console.log('post:', site.post)
 
-  // now that we have all the posts, order them
+  // now that we have all the posts, order them in ascending order (oldest first, newest last)
   site.posts = Object.keys(site.post).map(function(name) {
     return site.post[name]
   }).sort(function(a, b) {
@@ -197,6 +210,14 @@ function processContentToSite(done) {
 
   console.log('posts:', site.posts)
 
+  // let's put the last `postsPerPage` onto the main index page
+  site.site.index = {
+    title : cfg.title,
+    type  : 'index',
+    posts : site.posts.reverse().slice(0, cfg.postsPerPage),
+  }
+
+  console.log('index:', site.site.index)
   process.nextTick(done)
 }
 
@@ -245,6 +266,41 @@ function renderPages(done1) {
 
       var outfile = path.join(cfg.htmlDir, name + '.html')
       fs.writeFile(outfile, html, done2)
+    },
+    done1
+  )
+}
+
+function renderSite(done1) {
+  console.log('renderSite(): entry')
+
+  var htmlPages = Object.keys(site.site)
+
+  async.eachSeries(
+    htmlPages,
+    function(name, done2) {
+      console.log('- rendering %s', name)
+      var thisPage = site.site[name]
+
+      // render the index page
+      if ( thisPage.type === 'index' ) {
+        // render page
+        var locals = {
+          cfg      : cfg,
+          site     : site,
+          thisPage : thisPage, // title, type='index', posts=[...]
+        }
+        console.log('locals:', locals)
+        console.log('locals.thisPage.posts:', locals.thisPage.posts)
+        var html = views.index(locals)
+
+        var outfile = path.join(cfg.htmlDir, name + '.html')
+        fs.writeFile(outfile, html, done2)
+      }
+      else {
+        // don't know this 'data.type'
+        process.nextTick(done2)
+      }
     },
     done1
   )
