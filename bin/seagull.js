@@ -39,10 +39,7 @@ var cfg = fs.readFileSync(configFilename, 'utf8')
 cfg = xtend(defaults, JSON.parse(cfg))
 
 var content = {}
-var site = {
-  page : {},
-  post : {},
-}
+var site = {}
 
 var pageViewFilename = path.join(cfg.viewDir, 'page.jade')
 var pageView = jade.compileFile(pageViewFilename, {
@@ -151,9 +148,34 @@ function readAllContent(done) {
 }
 
 function processContentToSite(done) {
+  console.log('processContentToSite(): entry')
+
+  site = {
+    site  : {},
+    page  : {},
+    post  : {},
+    posts : [],
+  }
+
   Object.keys(content).forEach(function(name) {
     var p = content[name]
 
+    console.log('Examining item ' + name)
+    console.log('Examining item ' + p.type)
+
+    // if this page/post is not published, don't save it
+    if ( !p.published ) {
+      return
+    }
+    // if in the future, don't save it
+    if ( p.published > new Date() ) {
+      return
+    }
+
+    // save to site, no matter what
+    site.site[name] = p
+
+    // now add to 'page' or 'posts'
     if ( p.type === 'page' ) {
       site.page[name] = p
     }
@@ -162,10 +184,25 @@ function processContentToSite(done) {
     }
     // else, shouldn't be any other type here (yet)
   })
+
+  console.log('page:', site.page)
+  console.log('post:', site.post)
+
+  // now that we have all the posts, order them
+  site.posts = Object.keys(site.post).map(function(name) {
+    return site.post[name]
+  }).sort(function(a, b) {
+    return a.published > b.published
+  })
+
+  console.log('posts:', site.posts)
+
   process.nextTick(done)
 }
 
 function renderPosts(done1) {
+  console.log('renderPosts(): entry')
+
   async.eachSeries(
     Object.keys(site.post),
     function(name, done2) {
@@ -189,6 +226,8 @@ function renderPosts(done1) {
 }
 
 function renderPages(done1) {
+  console.log('renderPages(): entry')
+
   async.eachSeries(
     Object.keys(site.page),
     function(name, done2) {
