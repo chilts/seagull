@@ -2,15 +2,17 @@
 
 // core
 var path = require('path')
+var util = require('util')
 
 // npm
 var async = require('async')
+var fm = require('front-matter')
 var fs = require('graceful-fs')
+var fsExtra = require('fs-extra')
+var jade = require('jade')
+var marked = require('marked')
 var readDirFiles = require('read-dir-files')
 var xtend = require('xtend')
-var marked = require('marked')
-var jade = require('jade')
-var fsExtra = require('fs-extra')
 
 // --------------------------------------------------------------------------------------------------------------------
 // setup
@@ -32,7 +34,11 @@ var defaults = {
   contentDir : 'content',
   fileDir    : 'files',
   htmlDir    : 'html',
+  pretty     : false
 }
+
+var INPUT_EXT = '.md'
+var OUTPUT_EXT = '.html'
 
 var configFilename = 'config.json'
 var cfg = fs.readFileSync(configFilename, 'utf8')
@@ -44,19 +50,19 @@ var site = {}
 var pageViewFilename = path.join(cfg.viewDir, 'page.jade')
 var pageView = jade.compileFile(pageViewFilename, {
   filename : pageViewFilename,
-  pretty   : cfg.pretty || false,
+  pretty   : cfg.pretty,
 })
 
 var postViewFilename = path.join(cfg.viewDir, 'post.jade')
 var postView = jade.compileFile(postViewFilename, {
   filename : postViewFilename,
-  pretty   : cfg.pretty || false,
+  pretty   : cfg.pretty,
 })
 
 var indexViewFilename = path.join(cfg.viewDir, 'index.jade')
 var indexView = jade.compileFile(indexViewFilename, {
   filename : indexViewFilename,
-  pretty   : cfg.pretty || false,
+  pretty   : cfg.pretty,
 })
 
 var views = {
@@ -96,43 +102,48 @@ function copyFilesToHtml(done) {
 }
 
 function readAllFiles(dir, callback) {
-  console.log('readAllFiles(): entry(%s, %s)', dir)
+  console.log('readAllFiles(): entry(%s)', dir)
   var files = {}
 
   readDirFiles.read(dir, 'utf8', function (err, rawFiles) {
     if (err) return callback(err)
 
-    console.log('rawFiles:', rawFiles)
+    // console.log('rawFiles:', rawFiles)
 
-    Object.keys(rawFiles).forEach(function(filename, i) {
+    Object.keys(rawFiles).forEach(function(filename) {
       // if this is not a MarkDown file, ignore it
-      if ( !filename.match(/\.md$/) ) {
+      if ( path.extname(filename) !== INPUT_EXT ) {
         return
       }
 
       console.log('filename:', filename)
 
+      var message
+
       // split for the meta information at the top
-      var split = rawFiles[filename].split(/\n---\n/, 2)
-      var meta = JSON.parse(split[0])
-      var content = split[1] || ''
+      var file = fm(rawFiles[filename])
+      var meta = file.attributes
+      var content = file.body
 
       // check some things
       if ( !meta.title ) {
-        throw new Error("Required: File '" + dir + '/' + filename + "' has no title")
+        message = util.format('Required: File "%s/%s" has no title', dir, filename)
+        throw new Error(message)
       }
 
       if ( meta.type !== 'page' && meta.type !== 'post' ) {
-        throw new Error("Required: meta.type should be 'post' or 'page', not '" + meta.type + "'")
+        message = util.format('Required: meta.type should be "post" or "page", not "%s"', meta.type)
+        throw new Error(message)
       }
 
       // save all this info
-      var name = filename.substr(0, filename.length-3)
+      var name = path.basename(filename, INPUT_EXT)
+
       files[name] = {
         meta    : meta,
         title   : meta.title,
-        content : split[1],
-        html    : marked(split[1]),
+        content : content,
+        html    : marked(content),
         type    : meta.type,
       }
       if ( meta.published ) {
@@ -173,8 +184,7 @@ function processContentToSite(done) {
   Object.keys(content).forEach(function(name) {
     var p = content[name]
 
-    console.log('Examining item ' + name)
-    console.log('Examining item ' + p.type)
+    console.log('Examining item %s: %s', name, p.type)
 
     // if this page/post is not published, don't save it
     if ( !p.published ) {
@@ -239,7 +249,7 @@ function renderPosts(done1) {
       }
       var html = postView(locals)
 
-      var outfile = path.join(cfg.htmlDir, name + '.html')
+      var outfile = path.join(cfg.htmlDir, name + OUTPUT_EXT)
       fs.writeFile(outfile, html, done2)
     },
     done1
@@ -264,7 +274,7 @@ function renderPages(done1) {
       }
       var html = pageView(locals)
 
-      var outfile = path.join(cfg.htmlDir, name + '.html')
+      var outfile = path.join(cfg.htmlDir, name + OUTPUT_EXT)
       fs.writeFile(outfile, html, done2)
     },
     done1
@@ -294,7 +304,7 @@ function renderSite(done1) {
         console.log('locals.thisPage.posts:', locals.thisPage.posts)
         var html = views.index(locals)
 
-        var outfile = path.join(cfg.htmlDir, name + '.html')
+        var outfile = path.join(cfg.htmlDir, name + OUTPUT_EXT)
         fs.writeFile(outfile, html, done2)
       }
       else {

@@ -2,7 +2,6 @@
   "name": "seagull",
   "version": "0.3.0",
   "description": "An opinionated static blog generator.",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,9 +13,11 @@
   ],
   "author": "Andrew Chilton",
   "license": "ISC",
+  "repository": "chilts/seagull",
   "dependencies": {
     "async": "^1.2.0",
     "data2xml": "^1.2.1",
+    "front-matter": "1.0.0",
     "fs-extra": "^0.18.4",
     "graceful-fs": "^3.0.8",
     "jade": "^1.10.0",
