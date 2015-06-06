@@ -14,6 +14,7 @@
   ],
   "author": "Andrew Chilton",
   "license": "ISC",
+  "repository": "chilts/seagull",
   "dependencies": {
     "async": "^1.2.0",
     "data2xml": "^1.2.1",
