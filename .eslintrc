@@ -1,0 +1,11 @@
+env:
+  node: true
+
+rules:
+  comma-dangle: 0
+  curly: 0  
+  key-spacing: 0
+  no-use-before-define: [1, nofunc]
+  quotes: [1, single]
+  semi: 0
+  strict: 0

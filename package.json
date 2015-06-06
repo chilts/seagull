@@ -17,6 +17,7 @@
   "dependencies": {
     "async": "^1.2.0",
     "data2xml": "^1.2.1",
+    "front-matter": "1.0.0",
     "fs-extra": "^0.18.4",
     "graceful-fs": "^3.0.8",
     "jade": "^1.10.0",
