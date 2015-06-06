@@ -11,12 +11,13 @@ Make some posts, make some pages, run this program and you've got a static site.
 ├── config.json
 ├── files
 ├── html
-├── pages
-├── posts
+├── content
 └── views
 ```
 
-Stick some Markdown `pages` and `posts` into those directories (make sure you give them the `*.md` extension. You can have 'front matter' if you want to - put some JSON at the top of the file and end it with a newline, three dashes and another newline:
+Stick some Markdown files with extension `*.md`into content (and set the `type` in the front matter to be 'page' or
+'post') For front matter, put some JSON at the top of the file and end it with a newline, three dashes and another
+newline:
 
 ```
 {
