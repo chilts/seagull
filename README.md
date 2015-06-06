@@ -9,22 +9,21 @@ Make some posts, make some pages, run this program and you've got a static site.
 
 ```
 ├── config.json
-├── files
-├── html
-├── content
-└── views
+├── files/
+├── html/
+├── content/
+└── views/
 ```
 
-Stick some Markdown files with extension `*.md`into content (and set the `type` in the front matter to be 'page' or
-'post') For front matter, put some JSON at the top of the file and end it with a newline, three dashes and another
+Stick some Markdown files with extension `*.md` into ./content/ (and set the `type` in the front matter to be 'page' or
+'post') For front matter, put some YAML at the top of the file and end it with a newline, three dashes and another
 newline:
 
 ```
-{
-  "title": "First Post",
-  "published": "2015-06-05T03:11:41.849Z",
-  "type": "post"
-}
+---
+title: First Post
+published: 2015-06-05T03:11:41.849Z
+type: post
 ---
 ## First Post ##
 
