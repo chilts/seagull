@@ -28,27 +28,29 @@ marked.setOptions({
 
 var defaults = {
   postsPerPage : 10,
-  views : 'views',
-  posts : 'posts',
-  pages : 'pages',
-  files : 'files',
-  html  : 'html',
+  viewDir    : 'views',
+  contentDir : 'content',
+  fileDir    : 'files',
+  htmlDir    : 'html',
 }
 
 var configFilename = 'config.json'
 var cfg = fs.readFileSync(configFilename, 'utf8')
 cfg = xtend(defaults, JSON.parse(cfg))
 
-var posts = {}
-var pages = {}
+var content = {}
+var site = {
+  page : {},
+  post : {},
+}
 
-var pageViewFilename = path.join(cfg.views, 'page.jade')
+var pageViewFilename = path.join(cfg.viewDir, 'page.jade')
 var pageView = jade.compileFile(pageViewFilename, {
   filename : pageViewFilename,
   pretty   : cfg.pretty || false,
 })
 
-var postViewFilename = path.join(cfg.views, 'post.jade')
+var postViewFilename = path.join(cfg.viewDir, 'post.jade')
 var postView = jade.compileFile(postViewFilename, {
   filename : postViewFilename,
   pretty   : cfg.pretty || false,
@@ -63,8 +65,8 @@ async.series(
   [
     emptyHtmlDir,
     copyFilesToHtml,
-    readAllPosts,
-    readAllPages,
+    readAllContent,
+    processContentToSite,
     renderPosts,
     renderPages
   ],
@@ -75,16 +77,16 @@ async.series(
 
 function emptyHtmlDir(done) {
   console.log('emptyHtmlDir(): entry')
-  fsExtra.emptyDir(cfg.html, done)
+  fsExtra.emptyDir(cfg.htmlDir, done)
 }
 
 function copyFilesToHtml(done) {
   console.log('copyFilesToHtml(): entry')
-  fsExtra.copy(cfg.files, cfg.html, done)
+  fsExtra.copy(cfg.fileDir, cfg.htmlDir, done)
 }
 
-function readAllFiles(dir, type, callback) {
-  console.log('readAllFiles(): entry(%s, %s)', dir, type)
+function readAllFiles(dir, callback) {
+  console.log('readAllFiles(): entry(%s, %s)', dir)
   var files = {}
 
   readDirFiles.read(dir, 'utf8', function (err, rawFiles) {
@@ -110,6 +112,10 @@ function readAllFiles(dir, type, callback) {
         throw new Error("Required: File '" + dir + '/' + filename + "' has no title")
       }
 
+      if ( meta.type !== 'page' && meta.type !== 'post' ) {
+        throw new Error("Required: meta.type should be 'post' or 'page', not '" + meta.type + "'")
+      }
+
       // save all this info
       var name = filename.substr(0, filename.length-3)
       files[name] = {
@@ -117,7 +123,7 @@ function readAllFiles(dir, type, callback) {
         title   : meta.title,
         content : split[1],
         html    : marked(split[1]),
-        type    : type,
+        type    : meta.type,
       }
       if ( meta.published ) {
         files[name].published = new Date(meta.published)
@@ -134,43 +140,48 @@ function readAllFiles(dir, type, callback) {
   })
 }
 
-function readAllPosts(done) {
-  console.log('readAllPosts(): entry')
-  readAllFiles(cfg.posts, 'post', function(err, files) {
+function readAllContent(done) {
+  console.log('readAllContent(): entry')
+  readAllFiles(cfg.contentDir, function(err, files) {
     if (err) return done(err)
-    posts = files
-    // console.log('posts:', posts)
+    content = files
+    console.log('content:', content)
     done()
   })
 }
 
-function readAllPages(done) {
-  console.log('readAllPages(): entry')
-  readAllFiles(cfg.pages, 'page', function(err, files) {
-    if (err) return done(err)
-    pages = files
-    console.log('pages:', pages)
-    done()
+function processContentToSite(done) {
+  Object.keys(content).forEach(function(name) {
+    var p = content[name]
+
+    if ( p.type === 'page' ) {
+      site.page[name] = p
+    }
+    else if ( p.type === 'post' ) {
+      site.post[name] = p
+    }
+    // else, shouldn't be any other type here (yet)
   })
+  process.nextTick(done)
 }
 
 function renderPosts(done1) {
   async.eachSeries(
-    Object.keys(posts),
+    Object.keys(site.post),
     function(name, done2) {
       console.log('Rendering post %s', name)
-      var post = posts[name]
+      var post = site.post[name]
 
       // render page
       var locals = {
-        cfg   : cfg,
-        pages : pages,
-        posts : posts,
-        post  : post
+        cfg     : cfg,
+        site    : site,
+        content : content,
+        post    : post,
       }
       var html = postView(locals)
 
-      var outfile = path.join(cfg.html, name + '.html')
+      var outfile = path.join(cfg.htmlDir, name + '.html')
       fs.writeFile(outfile, html, done2)
     },
     done1
@@ -179,21 +190,21 @@ function renderPosts(done1) {
 
 function renderPages(done1) {
   async.eachSeries(
-    Object.keys(pages),
+    Object.keys(site.page),
     function(name, done2) {
       console.log('Rendering page %s', name)
-      var page = pages[name]
+      var page = site.page[name]
 
       // render page
       var locals = {
-        cfg   : cfg,
-        pages : pages,
-        posts : posts,
-        page  : page
+        cfg     : cfg,
+        site    : site,
+        content : content,
+        page    : page,
       }
       var html = pageView(locals)
 
-      var outfile = path.join(cfg.html, name + '.html')
+      var outfile = path.join(cfg.htmlDir, name + '.html')
       fs.writeFile(outfile, html, done2)
     },
     done1
