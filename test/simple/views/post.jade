@@ -1,0 +1,7 @@
+extends layout
+
+block content
+  h2= post.title
+  p.meta Author: #{post.author}
+  | #{post.content}
+  p.footer= post.published
