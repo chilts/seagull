@@ -41,29 +41,15 @@ cfg = xtend(defaults, JSON.parse(cfg))
 var content = {}
 var site = {}
 
-var pageViewFilename = path.join(cfg.viewDir, 'page.jade')
-var pageView = jade.compileFile(pageViewFilename, {
-  filename : pageViewFilename,
-  pretty   : cfg.pretty || false,
+var view = {}
+var viewNames = [ 'page', 'post', 'index' ]
+viewNames.forEach(function(name) {
+  var filename = path.join(cfg.viewDir, name + '.jade')
+  view[name] = jade.compileFile(filename, {
+    filename : filename,
+    pretty   : cfg.pretty || false,
+  })
 })
-
-var postViewFilename = path.join(cfg.viewDir, 'post.jade')
-var postView = jade.compileFile(postViewFilename, {
-  filename : postViewFilename,
-  pretty   : cfg.pretty || false,
-})
-
-var indexViewFilename = path.join(cfg.viewDir, 'index.jade')
-var indexView = jade.compileFile(indexViewFilename, {
-  filename : indexViewFilename,
-  pretty   : cfg.pretty || false,
-})
-
-var views = {
-  page  : pageView,
-  post  : postView,
-  index : indexView,
-}
 
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -237,7 +223,7 @@ function renderPosts(done1) {
         content : content,
         post    : post,
       }
-      var html = postView(locals)
+      var html = view.post(locals)
 
       var outfile = path.join(cfg.htmlDir, name + '.html')
       fs.writeFile(outfile, html, done2)
@@ -262,7 +248,7 @@ function renderPages(done1) {
         content : content,
         page    : page,
       }
-      var html = pageView(locals)
+      var html = view.page(locals)
 
       var outfile = path.join(cfg.htmlDir, name + '.html')
       fs.writeFile(outfile, html, done2)
@@ -292,7 +278,7 @@ function renderSite(done1) {
         }
         console.log('locals:', locals)
         console.log('locals.thisPage.posts:', locals.thisPage.posts)
-        var html = views.index(locals)
+        var html = view.index(locals)
 
         var outfile = path.join(cfg.htmlDir, name + '.html')
         fs.writeFile(outfile, html, done2)
