@@ -34,6 +34,12 @@ var defaults = {
   htmlDir    : 'html',
 }
 
+var months = {
+  '01' : 'Jan', '02' : 'Feb', '03' : 'Mar', '04' : 'Apr',
+  '05' : 'May', '06' : 'Jun', '07' : 'Jul', '08' : 'Aug',
+  '09' : 'Sep', '10' : 'Oct', '11' : 'Nov', '12' : 'Dec',
+}
+
 var configFilename = 'config.json'
 var cfg = fs.readFileSync(configFilename, 'utf8')
 cfg = xtend(defaults, JSON.parse(cfg))
@@ -42,7 +48,7 @@ var content = {}
 var site = {}
 
 var view = {}
-var viewNames = [ 'page', 'post', 'index' ]
+var viewNames = [ 'index', 'page', 'post', 'archive' ]
 viewNames.forEach(function(name) {
   var filename = path.join(cfg.viewDir, name + '.jade')
   view[name] = jade.compileFile(filename, {
@@ -203,6 +209,41 @@ function processContentToSite(done) {
     posts : site.posts.reverse().slice(0, cfg.postsPerPage),
   }
 
+  // create the archive pages
+  site.posts.forEach(function(post) {
+    console.log('post for archive:', post)
+    var d = post.published
+    console.log('year:', d.getFullYear())
+    console.log('month:', d.getMonth() )
+    console.log('day:', d.getDay())
+
+    post.year = d.getFullYear()
+    post.month = d.getMonth() + 1
+    post.day = d.getDay()
+
+    // push onto this year's posts
+    var yearName = 'archive-' + post.year
+    if ( !site.site[yearName] ) {
+      site.site[yearName] = {
+        title : 'Archive for ' + post.year,
+        posts : [],
+        type  : 'archive',
+      }
+    }
+    site.site[yearName].posts.push(post)
+
+    // push onto this months posts
+    var monthName = 'archive-' + post.year + '-' + pad2(post.month)
+    if ( !site.site[monthName] ) {
+      site.site[monthName] = {
+        title : 'Archive for ' + months[pad2(post.month)],
+        posts : [],
+        type  : 'archive',
+      }
+    }
+    site.site[monthName].posts.push(post)
+  })
+
   console.log('index:', site.site.index)
   process.nextTick(done)
 }
@@ -222,6 +263,7 @@ function renderPosts(done1) {
         site    : site,
         content : content,
         post    : post,
+        thisPage : post,
       }
       var html = view.post(locals)
 
@@ -247,6 +289,7 @@ function renderPages(done1) {
         site    : site,
         content : content,
         page    : page,
+        thisPage : page,
       }
       var html = view.page(locals)
 
@@ -283,6 +326,21 @@ function renderSite(done1) {
         var outfile = path.join(cfg.htmlDir, name + '.html')
         fs.writeFile(outfile, html, done2)
       }
+      else if ( thisPage.type === 'archive' ) {
+        console.log('Rendering archive : ', thisPage)
+        // render page
+        var locals = {
+          cfg      : cfg,
+          site     : site,
+          thisPage : thisPage, // title, type='archive', posts=[...]
+        }
+        console.log('locals:', locals)
+        console.log('locals.thisPage.posts:', locals.thisPage.posts)
+        var html = view.archive(locals)
+
+        var outfile = path.join(cfg.htmlDir, name + '.html')
+        fs.writeFile(outfile, html, done2)
+      }
       else {
         // don't know this 'data.type'
         process.nextTick(done2)
@@ -297,3 +355,14 @@ function finished() {
 }
 
 // --------------------------------------------------------------------------------------------------------------------
+// utility
+
+function pad2(n) {
+  if ( n < 10 ) {
+    return '0' + n
+  }
+  return '' + n
+}
+
+// ------------------------------------------------------------------------------------------------------------------
+
