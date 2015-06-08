@@ -51,10 +51,18 @@ var view = {}
 var viewNames = [ 'index', 'page', 'post', 'archive' ]
 viewNames.forEach(function(name) {
   var filename = path.join(cfg.viewDir, name + '.jade')
-  view[name] = jade.compileFile(filename, {
-    filename : filename,
-    pretty   : cfg.pretty || false,
-  })
+
+  if ( fs.existsSync(filename)) {
+    view[name] = jade.compileFile(filename, {
+      filename : filename,
+      pretty   : cfg.pretty || false,
+    })
+  }
+  else {
+    // this view is not found
+    console.warn('View ' + name + ' does not exist')
+    process.exit(2)
+  }
 })
 
 // --------------------------------------------------------------------------------------------------------------------
