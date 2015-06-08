@@ -263,7 +263,7 @@ function renderPosts(done1) {
         site    : site,
         content : content,
         post    : post,
-        thisPage : post,
+        self    : post,
       }
       var html = view.post(locals)
 
@@ -289,7 +289,7 @@ function renderPages(done1) {
         site    : site,
         content : content,
         page    : page,
-        thisPage : page,
+        self    : page,
       }
       var html = view.page(locals)
 
@@ -315,12 +315,12 @@ function renderSite(done1) {
       if ( thisPage.type === 'index' ) {
         // render page
         var locals = {
-          cfg      : cfg,
-          site     : site,
-          thisPage : thisPage, // title, type='index', posts=[...]
+          cfg  : cfg,
+          site : site,
+          self : thisPage, // title, type='index', posts=[...]
         }
         console.log('locals:', locals)
-        console.log('locals.thisPage.posts:', locals.thisPage.posts)
+        console.log('locals.self.posts:', locals.self.posts)
         var html = view.index(locals)
 
         var outfile = path.join(cfg.htmlDir, name + '.html')
@@ -330,12 +330,12 @@ function renderSite(done1) {
         console.log('Rendering archive : ', thisPage)
         // render page
         var locals = {
-          cfg      : cfg,
-          site     : site,
-          thisPage : thisPage, // title, type='archive', posts=[...]
+          cfg  : cfg,
+          site : site,
+          self : thisPage, // title, type='archive', posts=[...]
         }
         console.log('locals:', locals)
-        console.log('locals.thisPage.posts:', locals.thisPage.posts)
+        console.log('locals.self.posts:', locals.self.posts)
         var html = view.archive(locals)
 
         var outfile = path.join(cfg.htmlDir, name + '.html')

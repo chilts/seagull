@@ -8,7 +8,7 @@ html(lang="en")
     meta(name="author",content="daffy.io")
     link(rel="icon",href="/favicon.ico",type="image/x-icon")
 
-    title= title
+    title= cfg.title
 
     link(rel="stylesheet",href="https://cdn.jsdelivr.net/bootstrap/3.3.4/css/bootstrap#{cfg.min}.css")
     link(rel="stylesheet",href="/s/css/style#{cfg.min}.css")
@@ -35,7 +35,7 @@ html(lang="en")
               input.form-control(type="password",placeholder="Password")
             button.btn.btn-success(type="submit") Sign In
 
-    h1= thisPage.title
+    h1= self.title
     block content
 
     div.container
