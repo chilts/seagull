@@ -15,6 +15,7 @@ var fmt = require('fmt')
 
 // local
 var pad = require('./lib/pad.js')
+var extractPostsForDir = require('./lib/extract-posts-for-dir.js')
 
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -315,32 +316,16 @@ function createArchivePages(ctx, callback) {
 
   visitEveryVertex(
     ctx,
-    function(item, done) {
-      console.log('Visiting : ' + JSON.stringify(item, null, '  '))
+    function(dir, done) {
+      console.log('Visiting : ' + JSON.stringify(dir, null, '  '))
 
       // gather up all of the 'posts' in this vertex
-      var posts = Object.keys(item).filter(function(name) {
-        // filter out non-post pages and posts that are not yet published
-        if ( item[name].type !== 'post' ) {
-          return false
-        }
-        if ( !item[name].published ) {
-          return false
-        }
-        if ( item[name].published > now ) {
-          return false
-        }
-        return true
-      }).map(function(name) {
-        return item[name]
-      }).sort(function(a, b) {
-        return a.published > b.published
-      })
+      var posts = extractPostsForDir(dir)
       
       console.log('posts for archive:', posts)
 
       // ok, let's create some archive pages for this directory
-      item['archive'] = {
+      dir['archive'] = {
         title : 'Archive',
         type : 'archive',
         posts : posts,
@@ -357,26 +342,26 @@ function createArchivePages(ctx, callback) {
         console.log('Got post, year=%s, month=%s', year, month)
 
         // see if these archive pages exist yet
-        if ( item[yearPageName] ) {
+        if ( dir[yearPageName] ) {
           // just push onto the posts
-          item[yearPageName].posts.push(post)
+          dir[yearPageName].posts.push(post)
         }
         else {
           // create the new page
-          item[yearPageName] = {
+          dir[yearPageName] = {
             title : 'Archive: ' + year,
             type : 'archive',
             posts : [ post ],
           }
         }
 
-        if ( item[monthPageName] ) {
+        if ( dir[monthPageName] ) {
           // just push onto the posts
-          item[monthPageName].posts.push(post)
+          dir[monthPageName].posts.push(post)
         }
         else {
           // create the new page
-          item[monthPageName] = {
+          dir[monthPageName] = {
             title : 'Archive: ' + month,
             type : 'archive',
             posts : [ post ],
@@ -384,11 +369,11 @@ function createArchivePages(ctx, callback) {
         }
       })
 
-      console.log('+++ item +++', item)
-      // console.log(item['archive'])
+      console.log('+++ dir +++', dir)
+      // console.log(dir['archive'])
 
-      console.log('ITEM1:', item['archive-2015'])
-      console.log('ITEM2:', item['archive-2015-06'])
+      console.log('DIR1:', dir['archive-2015'])
+      console.log('DIR2:', dir['archive-2015-06'])
 
       console.log('pages in ctx.site:', Object.keys(ctx.site).join(', '))
       console.log('ctx.site:', ctx.site)
