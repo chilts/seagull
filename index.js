@@ -307,7 +307,30 @@ function convertMarkdownToHtml(ctx, callback) {
 
 function createIndexPages(ctx, callback) {
   fmt.title('Create Index Pages ...')
-  process.nextTick(callback)
+
+  // visit every vertex and see if 'index' already exists
+
+  visitEveryVertex(
+    ctx,
+    function(dir, done) {
+      if ( dir.index ) {
+        console.log('Index already exists')
+      }
+      else {
+        console.log('No index here')
+        var posts = extractPostsForDir(dir)
+
+        // create the index
+        dir['index'] = {
+          title : 'Index',
+          type : 'archive',
+          posts : posts,
+        }
+      }
+      process.nextTick(done)
+    },
+    callback
+  )
 }
 
 function createArchivePages(ctx, callback) {
