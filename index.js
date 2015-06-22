@@ -64,6 +64,7 @@ function seagull(opts, callback) {
       processFilesToPages.bind(null, ctx),
       createSiteStructure.bind(null, ctx),
       convertMarkdownToHtml.bind(null, ctx),
+      createIndexPages.bind(null, ctx),
       createArchivePages.bind(null, ctx),
       renderSite.bind(null, ctx)
     ],
@@ -293,14 +294,19 @@ function convertMarkdownToHtml(ctx, callback) {
 
   visitEveryLeaf(
     ctx,
-    function(item, callback) {
+    function(item, done) {
       // console.log('Doing item : ' + JSON.stringify(item))
       // console.log('Making HTML ...', item)
       item.html = marked(item.content)
-      process.nextTick(callback)
+      process.nextTick(done)
     },
     callback
   )
+}
+
+function createIndexPages(ctx, callback) {
+  fmt.title('Create Index Pages ...')
+  process.nextTick(callback)
 }
 
 function createArchivePages(ctx, callback) {
@@ -309,7 +315,7 @@ function createArchivePages(ctx, callback) {
 
   visitEveryVertex(
     ctx,
-    function(item, callback) {
+    function(item, done) {
       console.log('Visiting : ' + JSON.stringify(item, null, '  '))
 
       // gather up all of the 'posts' in this vertex
@@ -335,9 +341,6 @@ function createArchivePages(ctx, callback) {
 
       // ok, let's create some archive pages for this directory
       item['archive'] = {
-        // meta : [
-        //   // ???
-        // ],
         title : 'Archive',
         type : 'archive',
         posts : posts,
@@ -390,33 +393,7 @@ function createArchivePages(ctx, callback) {
       console.log('pages in ctx.site:', Object.keys(ctx.site).join(', '))
       console.log('ctx.site:', ctx.site)
 
-
-      // // create a map of all months from these posts
-      // var years = posts.map(function(post) {
-      //   return post.published.getFullYear()
-      // })
-      // var year = {}
-      // years.forEach(function(thisYear) {
-      //   year[thisYear] = posts.filter(function(post) {
-      //     return post.getFullYear() == thisYear
-      //   })
-      // })
-
-      // // do months
-      // var months = posts.map(function(post) {
-      //   return post.published.getFullYear() + '-' + pad(post.published.getMonth()+1)
-      // })
-      // var month = {}
-      // months.forEach(function(thisMonth) {
-      //   months[thisMonth] = posts.filter(function(thisMonth) {
-      //     return post.getFullYear() == thisYear
-      //   })
-      // })
-
-      // console.log('years=' + years.join(', '))
-      // console.log('months=' + months.join(', '))
-
-      process.nextTick(callback)
+      process.nextTick(done)
     },
     callback
   )
