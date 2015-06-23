@@ -79,7 +79,7 @@ function seagull(opts, callback) {
   )
 }
 
-function visitEveryLeaf(ctx, fn, callback) {
+function visitEveryPage(ctx, fn, callback) {
 
   function eachKey(obj, doneOuter) {
     async.eachSeries(
@@ -108,7 +108,7 @@ function visitEveryLeaf(ctx, fn, callback) {
   eachKey(ctx.site, callback)
 }
 
-function visitEveryVertex(ctx, fn, callback) {
+function visitEveryDir(ctx, fn, callback) {
 
   function eachKey(obj, doneOuter) {
     async.eachSeries(
@@ -276,12 +276,21 @@ function createSiteStructure(ctx, callback) {
 
       // split the path and take off the last element
       var s = pagename.split(/\//)
-      var name = s.splice(s.length-1, 1)
-      var path = s.join('/') + '/'
+      var pagename = s.splice(s.length-1, 1)
+      var pathname = s.join('/') + '/'
 
-      // save this page at path
-      ctx.site[path] = ctx.site[path] || {}
-      ctx.site[path][name] = page
+      // save this page at pathname
+      ctx.site[pathname] = ctx.site[pathname] || {
+        page : {},
+        posts : [],
+      }
+
+      // save all 'pages' to page
+      ctx.site[pathname].page[pagename] = page
+      // ... and put posts into posts too
+      if ( page.type === 'post' ) {
+        ctx.site[pathname].posts.push(page)
+      }
 
       done()
     },
@@ -293,7 +302,7 @@ function convertMarkdownToHtml(ctx, callback) {
   fmt.title('Convert Markdown to HTML ...')
   console.log('convertMarkdownToHtml(): entry')
 
-  visitEveryLeaf(
+  visitEveryPage(
     ctx,
     function(item, done) {
       // console.log('Doing item : ' + JSON.stringify(item))
@@ -310,10 +319,10 @@ function createIndexPages(ctx, callback) {
 
   // visit every vertex and see if 'index' already exists
 
-  visitEveryVertex(
+  visitEveryDir(
     ctx,
     function(dir, done) {
-      if ( dir.index ) {
+      if ( dir.page.index ) {
         console.log('Index already exists')
       }
       else {
@@ -321,7 +330,7 @@ function createIndexPages(ctx, callback) {
         var posts = extractPostsForDir(dir)
 
         // create the index
-        dir['index'] = {
+        dir.page.index = {
           title : 'Index',
           type : 'archive',
           posts : posts,
@@ -337,7 +346,7 @@ function createArchivePages(ctx, callback) {
   fmt.title('Create Archive Pages ...')
   console.log('createArchivePages(): entry')
 
-  visitEveryVertex(
+  visitEveryDir(
     ctx,
     function(dir, done) {
       console.log('Visiting : ' + JSON.stringify(dir, null, '  '))
@@ -348,7 +357,7 @@ function createArchivePages(ctx, callback) {
       console.log('posts for archive:', posts)
 
       // ok, let's create some archive pages for this directory
-      dir['archive'] = {
+      dir.page['archive'] = {
         title : 'Archive',
         type : 'archive',
         posts : posts,
@@ -365,26 +374,26 @@ function createArchivePages(ctx, callback) {
         console.log('Got post, year=%s, month=%s', year, month)
 
         // see if these archive pages exist yet
-        if ( dir[yearPageName] ) {
+        if ( dir.page[yearPageName] ) {
           // just push onto the posts
-          dir[yearPageName].posts.push(post)
+          dir.page[yearPageName].posts.push(post)
         }
         else {
           // create the new page
-          dir[yearPageName] = {
+          dir.page[yearPageName] = {
             title : 'Archive: ' + year,
             type : 'archive',
             posts : [ post ],
           }
         }
 
-        if ( dir[monthPageName] ) {
+        if ( dir.page[monthPageName] ) {
           // just push onto the posts
-          dir[monthPageName].posts.push(post)
+          dir.page[monthPageName].posts.push(post)
         }
         else {
           // create the new page
-          dir[monthPageName] = {
+          dir.page[monthPageName] = {
             title : 'Archive: ' + month,
             type : 'archive',
             posts : [ post ],
@@ -398,7 +407,7 @@ function createArchivePages(ctx, callback) {
       console.log('DIR1:', dir['archive-2015'])
       console.log('DIR2:', dir['archive-2015-06'])
 
-      console.log('pages in ctx.site:', Object.keys(ctx.site).join(', '))
+      console.log('paths in ctx.site:', Object.keys(ctx.site).join(', '))
       console.log('ctx.site:', ctx.site)
 
       process.nextTick(done)
@@ -411,24 +420,24 @@ function renderSite(ctx, callback) {
   fmt.title('Render Site ...')
   console.log('renderSite(): entry')
 
-  var sectionNames = Object.keys(ctx.site)
+  var paths = Object.keys(ctx.site)
 
-  // ToDo: turn this into a visitEveryLeaf or visitEveryVertex!!!
+  // ToDo: turn this into a visitEveryPage or visitEveryDir!!!
 
   async.eachSeries(
-    sectionNames,
-    function(sectionName, done1) {
-      console.log('Doing section ' + sectionName)
-      var section = ctx.site[sectionName]
+    paths,
+    function(pathname, done1) {
+      console.log('Doing pathname ' + pathname)
+      var thisPath = ctx.site[pathname]
 
-      // console.log('YAHBOO! section -> ', JSON.stringify(section, null, '  '))
+      // console.log('YAHBOO! thisPath -> ', JSON.stringify(thisPath, null, '  '))
 
-      var pageNames = Object.keys(section)
+      var pageNames = Object.keys(thisPath.page)
       async.eachSeries(
         pageNames,
         function(pageName, done2) {
           console.log('Doing page ' + pageName)
-          var page = section[pageName]
+          var page = thisPath.page[pageName]
 
           // set up some common things
           var outfile = path.join(ctx.cfg.htmlDir, pageName + '.html')
