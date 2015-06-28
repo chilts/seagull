@@ -21,6 +21,7 @@
     "graceful-fs": "^3.0.8",
     "jade": "^1.10.0",
     "marked": "^0.3.3",
+    "mkdirp": "^0.5.1",
     "read-dir-files": "^0.1.1",
     "xtend": "^4.0.0"
   }

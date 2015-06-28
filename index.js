@@ -12,10 +12,14 @@ var fs = require('graceful-fs')
 var marked = require('marked')
 var jade = require('jade')
 var fmt = require('fmt')
+var mkdirp = require('mkdirp')
 
 // local
 var pad = require('./lib/pad.js')
-var extractPostsForDir = require('./lib/extract-posts-for-dir.js')
+var visitEveryDir = require('./lib/visit-every-dir.js')
+var processPosts = require('./lib/process-posts.js')
+var createAtomFeeds = require('./lib/create-atom-feeds.js')
+var createRssFeeds = require('./lib/create-rss-feeds.js')
 
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -43,12 +47,13 @@ var DEFAULTS = {
 }
 
 function seagull(opts, callback) {
-  console.log('seagull(): entry')
+  fmt.title('seagull(): entry')
 
   var cfg = xtend({}, DEFAULTS, opts)
   console.log('cfg:', cfg)
 
   var ctx = {
+    now : new Date(), // so all plugins can use exactly the same date
     cfg : cfg,
     view : {}, // the Jade functions for views
     file : {}, // the raw     { '/about.md' : 'file contents' }
@@ -60,13 +65,17 @@ function seagull(opts, callback) {
     [
       loadUpJadeViews.bind(null, ctx),
       cleanHtmlDir.bind(null, ctx),
-      copyFilesToHtml.bind(null, ctx),
-      readAllFiles.bind(null, ctx),
-      processFilesToPages.bind(null, ctx),
+      copyStaticFilesToHtml.bind(null, ctx),
+      readAllContent.bind(null, ctx),
+      processContentToPages.bind(null, ctx),
       createSiteStructure.bind(null, ctx),
       convertMarkdownToHtml.bind(null, ctx),
+      processPosts.bind(null, ctx),
       createIndexPages.bind(null, ctx),
       createArchivePages.bind(null, ctx),
+      createAtomFeeds.bind(null, ctx),
+      createRssFeeds.bind(null, ctx),
+      createOutputDirs.bind(null, ctx),
       renderSite.bind(null, ctx)
     ],
     function(err) {
@@ -108,37 +117,6 @@ function visitEveryPage(ctx, fn, callback) {
   eachKey(ctx.site, callback)
 }
 
-function visitEveryDir(ctx, fn, callback) {
-
-  function eachKey(obj, doneOuter) {
-    async.eachSeries(
-      Object.keys(obj),
-      function(key, doneInner) {
-        var item = obj[key]
-        console.log('vertex: Doing ' + key)
-
-        // if there is a 'type', then this must be a page of some sort
-        if ( item.type ) {
-          console.log('vertex:  - type=' + item.type)
-          // nothing to do here
-          return doneInner()
-        }
-        else {
-          // another tree
-          console.log('vertex:  - recursing down another tree')
-
-          // call the fn, then move on once that's done
-          fn(item, doneInner)
-        }
-      },
-      doneOuter
-    )
-  }
-
-  // kick it all off
-  eachKey(ctx.site, callback)
-}
-
 // --------------------------------------------------------------------------------------------------------------------
 
 function loadUpJadeViews(ctx, callback) {
@@ -169,17 +147,16 @@ function loadUpJadeViews(ctx, callback) {
 
 function cleanHtmlDir(ctx, callback) {
   fmt.title('Clear HTML dir ...')
-  console.log('cleanHtmlDir(): entry')
   fsExtra.emptyDir(ctx.cfg.htmlDir, callback)
 }
 
-function copyFilesToHtml(ctx, callback) {
-  console.log('copyFilesToHtml(): entry')
+function copyStaticFilesToHtml(ctx, callback) {
+  fmt.title('Copyy Static Files to Html ...')
   fsExtra.copy(ctx.cfg.fileDir, ctx.cfg.htmlDir, callback)
 }
 
-function readAllFiles(ctx, callback) {
-  console.log('readAllFiles(): entry')
+function readAllContent(ctx, callback) {
+  fmt.title('Read All Content ...')
 
   find.file(ctx.cfg.contentDir, function(filenames) {
 
@@ -204,8 +181,8 @@ function readAllFiles(ctx, callback) {
   }).error(callback)
 }
 
-function processFilesToPages(ctx, callback) {
-  console.log('processFilesToPages(): entry')
+function processContentToPages(ctx, callback) {
+  fmt.title('Process Content to Pages ...')
 
   var filenames = Object.keys(ctx.file)
 
@@ -225,9 +202,6 @@ function processFilesToPages(ctx, callback) {
       // check to see if this is a future
       if ( meta.published ) {
         // see if this is to be published in the future
-        console.log('pub:', meta.published)
-        console.log('pub:', new Date())
-        console.log('pub:', meta.published > new Date())
         if ( meta.published > new Date() ) {
           // this is a future - check to see if we're allowing futures
           if ( !ctx.cfg.includeFutures ) {
@@ -249,6 +223,7 @@ function processFilesToPages(ctx, callback) {
 
       // save all this info into the ctx.page
       ctx.page[name] = {
+        name      : name + '.html',
         meta      : meta,
         title     : meta.title,
         type      : meta.type,
@@ -265,7 +240,6 @@ function processFilesToPages(ctx, callback) {
 
 function createSiteStructure(ctx, callback) {
   fmt.title('Create Site Structure ...')
-  console.log('createSiteStructure(): entry')
 
   var pagenames = Object.keys(ctx.page)
 
@@ -281,8 +255,12 @@ function createSiteStructure(ctx, callback) {
 
       // save this page at pathname
       ctx.site[pathname] = ctx.site[pathname] || {
-        page : {},
-        posts : [],
+        page      : {}, // all pages that have been read in from the filesystem (including posts)
+        posts     : [], // all posts (including draft and future)
+        published : [], // all published posts
+        tag       : {}, // posts in each tag
+        category  : {}, // posts in each category
+        author    : {}, // posts for each author
       }
 
       // save all 'pages' to page
@@ -290,6 +268,16 @@ function createSiteStructure(ctx, callback) {
       // ... and put posts into posts too
       if ( page.type === 'post' ) {
         ctx.site[pathname].posts.push(page)
+      }
+      // check to see if this post has a category
+      if ( page.category ) {
+        // cool
+      }
+      // check to see if this post has some tags
+      if ( page.tags ) {
+        if ( typeof page.tags === 'string' ) {
+          page.tags = [ page.tags ]
+        }
       }
 
       done()
@@ -300,13 +288,10 @@ function createSiteStructure(ctx, callback) {
 
 function convertMarkdownToHtml(ctx, callback) {
   fmt.title('Convert Markdown to HTML ...')
-  console.log('convertMarkdownToHtml(): entry')
 
   visitEveryPage(
     ctx,
     function(item, done) {
-      // console.log('Doing item : ' + JSON.stringify(item))
-      // console.log('Making HTML ...', item)
       item.html = marked(item.content)
       process.nextTick(done)
     },
@@ -321,19 +306,19 @@ function createIndexPages(ctx, callback) {
 
   visitEveryDir(
     ctx,
-    function(dir, done) {
+    function(url, dir, done) {
       if ( dir.page.index ) {
         console.log('Index already exists')
       }
       else {
         console.log('No index here')
-        var posts = extractPostsForDir(dir)
 
         // create the index
         dir.page.index = {
           title : 'Index',
           type : 'archive',
-          posts : posts,
+          // ToDo: use the pagifyPosts info
+          posts : dir.posts.reverse().slice(0, ctx.cfg.postsPerPage),
         }
       }
       process.nextTick(done)
@@ -344,23 +329,17 @@ function createIndexPages(ctx, callback) {
 
 function createArchivePages(ctx, callback) {
   fmt.title('Create Archive Pages ...')
-  console.log('createArchivePages(): entry')
 
   visitEveryDir(
     ctx,
-    function(dir, done) {
-      console.log('Visiting : ' + JSON.stringify(dir, null, '  '))
-
-      // gather up all of the 'posts' in this vertex
-      var posts = extractPostsForDir(dir)
-      
-      console.log('posts for archive:', posts)
+    function(url, dir, done) {
+      var posts = dir.posts
 
       // ok, let's create some archive pages for this directory
       dir.page['archive'] = {
         title : 'Archive',
         type : 'archive',
-        posts : posts,
+        posts : posts.reverse(),
       }
 
       posts.forEach(function(post) {
@@ -401,16 +380,20 @@ function createArchivePages(ctx, callback) {
         }
       })
 
-      console.log('+++ dir +++', dir)
-      // console.log(dir['archive'])
-
-      console.log('DIR1:', dir['archive-2015'])
-      console.log('DIR2:', dir['archive-2015-06'])
-
-      console.log('paths in ctx.site:', Object.keys(ctx.site).join(', '))
-      console.log('ctx.site:', ctx.site)
-
       process.nextTick(done)
+    },
+    callback
+  )
+}
+
+function createOutputDirs(ctx, callback) {
+  fmt.title('Create Output Dirs ...')
+
+  visitEveryDir(
+    ctx,
+    function(url, dir, done) {
+      var dirname = path.join(ctx.cfg.htmlDir, url)
+      mkdirp(dirname, done)
     },
     callback
   )
@@ -418,29 +401,25 @@ function createArchivePages(ctx, callback) {
 
 function renderSite(ctx, callback) {
   fmt.title('Render Site ...')
-  console.log('renderSite(): entry')
 
   var paths = Object.keys(ctx.site)
 
   // ToDo: turn this into a visitEveryPage or visitEveryDir!!!
 
-  async.eachSeries(
-    paths,
-    function(pathname, done1) {
-      console.log('Doing pathname ' + pathname)
-      var thisPath = ctx.site[pathname]
+  visitEveryDir(
+    ctx,
+    function(url, dir, done) {
+      console.log('Doing url ' + url)
 
-      // console.log('YAHBOO! thisPath -> ', JSON.stringify(thisPath, null, '  '))
-
-      var pageNames = Object.keys(thisPath.page)
+      var pageNames = Object.keys(dir.page)
       async.eachSeries(
         pageNames,
         function(pageName, done2) {
           console.log('Doing page ' + pageName)
-          var page = thisPath.page[pageName]
+          var page = dir.page[pageName]
 
           // set up some common things
-          var outfile = path.join(ctx.cfg.htmlDir, pageName + '.html')
+          var outfile = path.join(ctx.cfg.htmlDir, url, pageName)
           var type = page.type
 
           // 'post' is the only special type, all the rest just render their templates
@@ -453,7 +432,7 @@ function renderSite(ctx, callback) {
               self    : page,
             }
             var html = ctx.view.page(locals)
-            fs.writeFile(outfile, html, done2)
+            fs.writeFile(outfile + '.html', html, done2)
           }
           else if ( page.type === 'post' ) {
             console.log('Rendering post %s', pageName)
@@ -465,7 +444,7 @@ function renderSite(ctx, callback) {
               self    : page,
             }
             var html = ctx.view.post(locals)
-            fs.writeFile(outfile, html, done2)
+            fs.writeFile(outfile + '.html', html, done2)
           }
           else if ( page.type === 'archive' ) {
             // render page
@@ -475,26 +454,21 @@ function renderSite(ctx, callback) {
               site    : ctx.site,
               self    : page,
             }
-            // console.log('pageL', JSON.stringify(page, '  ', 2))
-            console.log('cfg', locals.cfg)
-            console.log('sdf', page.type)
-            console.log('sdf', page.posts.length)
-            page.posts.forEach(function(post) {
-              console.log(' - title:', post.title)
-              console.log(' - type:', post.type)
-              console.log(' - published:', post.published)
-            })
-            // console.log('published', page.posts[1].published)
+
             var html = ctx.view.archive(locals)
-            // console.log('locals', JSON.stringify(locals, '  ', 2))
-            fs.writeFile(outfile, html, done2)
+            fs.writeFile(outfile + '.html', html, done2)
+          }
+          else if ( page.type === 'rendered' ) {
+            // don't write an extension for this outfile
+            fs.writeFile(outfile, page.content, done2)
           }
           else {
             console.warn('Unknown page type : ', page.type)
+            process.nextTick(done2)
           }
 
         },
-        done1
+        done
       )
     },
     callback
