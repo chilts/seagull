@@ -17,6 +17,7 @@ var mkdirp = require('mkdirp')
 // local
 var pad = require('./lib/pad.js')
 var visitEveryDir = require('./lib/visit-every-dir.js')
+var createSitemap = require('./lib/create-sitemap.js')
 var processPosts = require('./lib/process-posts.js')
 var createAtomFeeds = require('./lib/create-atom-feeds.js')
 var createRssFeeds = require('./lib/create-rss-feeds.js')
@@ -69,6 +70,7 @@ function seagull(opts, callback) {
       readAllContent.bind(null, ctx),
       processContentToPages.bind(null, ctx),
       createSiteStructure.bind(null, ctx),
+      createSitemap.bind(null, ctx),
       convertMarkdownToHtml.bind(null, ctx),
       processPosts.bind(null, ctx),
       createIndexPages.bind(null, ctx),
