@@ -3,6 +3,9 @@
   "version": "0.8.0",
   "description": "An opinionated static blog generator.",
   "main": "index.js",
+  "bin": {
+    "seagull": "./bin/seagull.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

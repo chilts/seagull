@@ -79,7 +79,9 @@ Other ideas for diffferent page types:
 
 ## ChangeLog ##
 
-* 2015-06-029: v0.8.0
+* 2015-06-29: v0.8.1
+  * Add seagull.js as a bin in package.json
+* 2015-06-29: v0.8.0
   * Refactored everything
   * Views are easier to manage/load
   * Create and render the archive pages
