@@ -1,5 +1,8 @@
 {
   "title" : "A Simple Blog",
+  "domain" : "simple.seagull.127.0.0.1.xip.io",
+  "authorName" : "Bob Jones",
+  "authorEmail" : "me@example.com",
   "postsPerPage" : 10,
   "pretty": true,
   "min": ""

@@ -5,10 +5,10 @@ html(lang="en")
     meta(http-equiv="X-UA-Compatible",content="IE=edge")
     meta(name="viewport",content="width=device-width, initial-scale=1")
     meta(name="description",content="The easy way to create a lovely blog")
-    meta(name="author",content="daffy.io")
+    meta(name="author",content=cfg.author)
     link(rel="icon",href="/favicon.ico",type="image/x-icon")
 
-    title= cfg.title
+    title= self.title || cfg.title
 
     link(rel="stylesheet",href="https://cdn.jsdelivr.net/bootstrap/3.3.4/css/bootstrap#{cfg.min}.css")
     link(rel="stylesheet",href="/s/css/style#{cfg.min}.css")
@@ -26,7 +26,7 @@ html(lang="en")
             span.icon-bar
             span.icon-bar
             span.icon-bar
-          a.navbar-brand(href="/") daffy.io
+          a.navbar-brand(href="/")= cfg.title
         div#navbar.navbar-collapse.collapse
           form.navbar-form.navbar-right
             div.form-group
