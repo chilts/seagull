@@ -79,6 +79,9 @@ Other ideas for diffferent page types:
 
 ## ChangeLog ##
 
+* 2015-06-29: v0.8.3, v0.8.4
+  * Various fixes
+  * Now deals with an empty site better
 * 2015-06-29: v0.8.2
   * Make seagull.js be executable using "/usr/bin/env node"
 * 2015-06-29: v0.8.1
