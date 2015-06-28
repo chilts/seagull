@@ -1,5 +1,6 @@
 {
   "title" : "A Simple Blog",
+  "domain" : "average.seagull.127.0.0.1.xip.io",
   "postsPerPage" : 10,
   "pretty": true,
   "min": ""
