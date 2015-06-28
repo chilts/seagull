@@ -1,0 +1,7 @@
+extends layout
+
+block content
+  h2= self.title
+  p.meta Author: #{self.author}
+  | !{self.html}
+  p.footer= self.published.toISOString()
