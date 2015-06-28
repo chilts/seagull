@@ -79,6 +79,8 @@ Other ideas for diffferent page types:
 
 ## ChangeLog ##
 
+* 2015-06-29: v0.8.2
+  * Make seagull.js be executable using "/usr/bin/env node"
 * 2015-06-29: v0.8.1
   * Add seagull.js as a bin in package.json
 * 2015-06-29: v0.8.0
