@@ -9,13 +9,14 @@ var seagull = require('..')
 
 // ------------------------------------------------------------------------------------------------------------------
 
+// use either the filename passed in, or the default 'config.json' for the config
+var configFilename = process.argv[2] || 'config.json'
+
 // read the config file
-var configFilename = 'config.json'
 var cfg = fs.readFileSync(configFilename, 'utf8')
 cfg = JSON.parse(cfg)
 
-// pass it to seagull
-
+// pass the config to seagull
 seagull(cfg, function(err) {
   console.log('Finished')
 })
