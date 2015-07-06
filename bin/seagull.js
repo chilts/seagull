@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 // ------------------------------------------------------------------------------------------------------------------
 
+'use strict'
+
 // npm
 var fs = require('graceful-fs')
 
@@ -18,6 +20,7 @@ cfg = JSON.parse(cfg)
 
 // pass the config to seagull
 seagull(cfg, function(err) {
+  if (err) throw err
   console.log('Finished')
 })
 

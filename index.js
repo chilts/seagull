@@ -1,5 +1,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
+'use strict'
+
 // npm
 var async = require('async')
 var xtend = require('xtend')
@@ -24,8 +26,6 @@ var renderSite = require('./lib/render-site.js')
 
 // --------------------------------------------------------------------------------------------------------------------
 
-var now = new Date()
-
 var DEFAULTS = {
   postsPerPage   : 10,
   viewDir        : 'views',
@@ -43,8 +43,8 @@ function seagull(opts, callback) {
   console.log('cfg:', cfg)
 
   var ctx = {
-    now : new Date(), // so all plugins can use exactly the same date
-    cfg : cfg,
+    now  : new Date(), // so all plugins can use exactly the same date
+    cfg  : cfg,
     view : {}, // the Jade functions for views
     file : {}, // the raw     { '/about.md' : 'file contents' }
     page : {}, // the pages : { '/about' : { ...etc... } } // no hierarchy yet (e.g. no '/blog/', just '/blog/post.md'
@@ -67,7 +67,7 @@ function seagull(opts, callback) {
       createAtomFeeds.bind(null, ctx),
       createRssFeeds.bind(null, ctx),
       createOutputDirs.bind(null, ctx),
-      renderSite.bind(null, ctx)
+      renderSite.bind(null, ctx),
     ],
     function(err) {
       console.log('-------------------------------------------------------------------------------')
