@@ -79,7 +79,14 @@ Other ideas for diffferent page types:
 
 ## ChangeLog ##
 
-* 2015-06-29: v0.8.3, v0.8.4
+* 2015-07-08: v0.9.0
+  * added eslint for development (with many updates)
+  * new tests for example sites - runs on TravisCI
+  * 'published' config to set a fixed time for publishing
+  * check the 'files' directory exists (skip if not)
+  * check the 'content' directory exists (skip if not)
+  * updates to package.json
+* 2015-06-29: v0.8.4
   * Various fixes
   * Now deals with an empty site better
 * 2015-06-29: v0.8.2
