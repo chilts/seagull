@@ -15,13 +15,28 @@ var seagull = require('..')
 var configFilename = process.argv[2] || 'config.json'
 
 // read the config file
-var cfg = fs.readFileSync(configFilename, 'utf8')
-cfg = JSON.parse(cfg)
+fs.readFile(configFilename, 'utf8', function(errReadFile, data) {
+  if (errReadFile) {
+    /* eslint no-process-exit: 0 */
+    console.warn('Error opening file: ' + errReadFile)
+    process.exit(2)
+  }
 
-// pass the config to seagull
-seagull(cfg, function(err) {
-  if (err) throw err
-  console.log('Finished')
+  var cfg
+  try {
+    cfg = JSON.parse(data)
+  }
+  catch (errJsonParse) {
+    /* eslint no-process-exit: 0 */
+    console.warn('Error parsing config: ' + errJsonParse)
+    process.exit(2)
+  }
+
+  // pass the config to seagull
+  seagull(cfg, function(err) {
+    if (err) throw err
+    console.log('Finished')
+  })
 })
 
 // ------------------------------------------------------------------------------------------------------------------
