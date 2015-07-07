@@ -7,7 +7,7 @@
     "seagull": "./bin/seagull.js"
   },
   "scripts": {
-    "test": "eslint *.js lib/*.js bin/*.js"
+    "test": "set -e; eslint *.js lib/*.js bin/*.js test/*.js; for T in empty simple average; do cd test/$T && node ../test.js && cd ../../; done"
   },
   "keywords": [
     "static",
@@ -31,6 +31,7 @@
     "xtend": "^4.0.0"
   },
   "devDependencies": {
-    "eslint": "^0.24.0"
+    "eslint": "^0.24.0",
+    "tape": "^4.0.0"
   }
 }
