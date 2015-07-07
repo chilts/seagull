@@ -43,7 +43,7 @@ function seagull(opts, callback) {
   console.log('cfg:', cfg)
 
   var ctx = {
-    now  : new Date(), // so all plugins can use exactly the same date
+    now  : cfg.published ? new Date(cfg.published) : new Date(), // so all plugins can use exactly the same date
     cfg  : cfg,
     view : {}, // the Jade functions for views
     file : {}, // the raw     { '/about.md' : 'file contents' }
