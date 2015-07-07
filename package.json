@@ -6,22 +6,6 @@
   "bin": {
     "seagull": "./bin/seagull.js"
   },
-  "homepage": "https://github.com/chilts/seagull",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/chilts/seagull.git"
-  },
-  "scripts": {
-    "test": "set -e; eslint *.js lib/*.js bin/*.js test/*.js; for T in empty simple average; do cd test/$T && node ../test.js && cd ../../; done"
-  },
-  "keywords": [
-    "static",
-    "site",
-    "generator",
-    "blog"
-  ],
-  "author": "Andrew Chilton",
-  "license": "ISC",
   "dependencies": {
     "async": "^1.2.0",
     "data2xml": "^1.2.1",
@@ -38,5 +22,25 @@
   "devDependencies": {
     "eslint": "^0.24.0",
     "tape": "^4.0.0"
-  }
+  },
+  "homepage": "https://github.com/chilts/seagull",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/chilts/seagull.git"
+  },
+  "scripts": {
+    "test": "set -e; eslint *.js lib/*.js bin/*.js test/*.js; for T in empty simple average; do cd test/$T && node ../test.js && cd ../../; done"
+  },
+  "author": {
+    "name": "Andrew Chilton",
+    "email": "andychilton@gmail.com",
+    "url": "http://chilts.org/"
+  },
+  "license": "ISC",
+  "keywords": [
+    "static",
+    "site",
+    "generator",
+    "blog"
+  ]
 }
