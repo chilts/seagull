@@ -53,11 +53,11 @@ function seagull(opts, callback) {
 
   async.series(
     [
-      loadUpJadeViews.bind(null, ctx),
       cleanHtmlDir.bind(null, ctx),
       copyStaticFilesToHtml.bind(null, ctx),
       readAllContent.bind(null, ctx),
       processContentToPages.bind(null, ctx),
+      loadUpJadeViews.bind(null, ctx),
       createSiteStructure.bind(null, ctx),
       createSitemap.bind(null, ctx),
       convertMarkdownToHtml.bind(null, ctx),
