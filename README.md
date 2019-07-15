@@ -54,8 +54,8 @@ For a post to be considered draft, set `published` in the front matter to false.
 The only type of page that is special is the `post` type, since they are used to generate lots of blog specific pages (such as the archive, pageified pages, categories, tags and author pages.
 
 If you use any other type than `post`, then it is rendered as a normal page but using the view named after it. For
-example, if you have a page of type `recipe`, then the `views/recipe.jade` file is rendered. If you have a type `page`
-(remember, `page` is not special), then the `views/page.jade` is rendered.
+example, if you have a page of type `recipe`, then the `views/recipe.pug` file is rendered. If you have a type `page`
+(remember, `page` is not special), then the `views/page.pug` is rendered.
 
 For example, let's make a page type of `map` called `wellington.md`:
 
@@ -69,7 +69,7 @@ For example, let's make a page type of `map` called `wellington.md`:
 Welcome to the Middle of Middle Earth.
 ```
 
-Then a view called `views/map.jade` is rendered. You can of course render it anyway you like, perhaps extend the same layout as other pages or a completely different one. You may also wish to render the content too.
+Then a view called `views/map.pug` is rendered. You can of course render it anyway you like, perhaps extend the same layout as other pages or a completely different one. You may also wish to render the content too.
 
 Other ideas for diffferent page types:
 

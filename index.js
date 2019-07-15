@@ -8,7 +8,7 @@ var xtend = require('xtend')
 var fmt = require('fmt')
 
 // plugins
-var loadUpJadeViews = require('./lib/load-up-jade-views.js')
+var loadUpPugViews = require('./lib/load-up-pug-views.js')
 var cleanHtmlDir = require('./lib/clean-html-dir.js')
 var copyStaticFilesToHtml = require('./lib/copy-static-files-to-html.js')
 var readAllContent = require('./lib/read-all-content.js')
@@ -57,7 +57,7 @@ function seagull(opts, callback) {
       copyStaticFilesToHtml.bind(null, ctx),
       readAllContent.bind(null, ctx),
       processContentToPages.bind(null, ctx),
-      loadUpJadeViews.bind(null, ctx),
+      loadUpPugViews.bind(null, ctx),
       createSiteStructure.bind(null, ctx),
       createSitemap.bind(null, ctx),
       convertMarkdownToHtml.bind(null, ctx),

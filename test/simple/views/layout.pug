@@ -10,13 +10,9 @@ html(lang="en")
 
     title= self.title || cfg.title
 
-    link(rel="stylesheet",href="https://cdn.jsdelivr.net/bootstrap/3.3.4/css/bootstrap#{cfg.min}.css")
-    link(rel="stylesheet",href="/s/css/style#{cfg.min}.css")
+    link(rel="stylesheet",href=`https://cdn.jsdelivr.net/bootstrap/3.3.4/css/bootstrap${cfg.min}.css`)
+    link(rel="stylesheet",href=`/s/css/style${cfg.min}.css`)
 
-    //[if lt IE 9]
-      script(src="https://cdn.jsdelivr.net/html5shiv/3.7.2/html5shiv#{cfg.min}.js")
-      script(src="https://cdn.jsdelivr.net/respond/1.4.2/respond.min.js")
-      ![endif]
   body
     nav.navbar.navbar-inverse.navbar-fixed-top
       div.container
@@ -42,9 +38,9 @@ html(lang="en")
       hr
       footer
         p
-          | &copy; loopdog.co 2014-2015
+          | &copy; webdev.sh 2014-2015
 
-    script(src="https://cdn.jsdelivr.net/jquery/1.11.3/jquery#{cfg.min}.js")
-    script(src="https://cdn.jsdelivr.net/bootstrap/3.3.4/js/bootstrap#{cfg.min}.js")
-    script(src="/s/js/jquery.refresh#{cfg.min}.js")
-    script(src="/s/js/ready#{cfg.min}.js")
+    script(src=`https://cdn.jsdelivr.net/jquery/1.11.3/jquery${cfg.min}.js`)
+    script(src=`https://cdn.jsdelivr.net/bootstrap/3.3.4/js/bootstrap${cfg.min}.js`)
+    script(src=`/s/js/jquery.refresh${cfg.min}.js`)
+    script(src=`/s/js/ready${cfg.min}.js`)

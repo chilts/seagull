@@ -3,5 +3,5 @@ extends layout
 block content
   for post in self.posts.reverse()
     h2= post.title
-    !{post.html}
+    | !{post.html}
     p= post.published.toISOString()
