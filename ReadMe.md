@@ -79,6 +79,9 @@ Other ideas for diffferent page types:
 
 ## ChangeLog ##
 
+* 2019-07-16: v0.19.0
+  * updated to use Pug instead of Jade
+  * updated all other packages so npm audit was okay
 * 2015-07-08: v0.9.0
   * added eslint for development (with many updates)
   * new tests for example sites - runs on TravisCI
