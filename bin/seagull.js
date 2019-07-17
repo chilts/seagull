@@ -1,42 +1,37 @@
 #!/usr/bin/env node
-// ------------------------------------------------------------------------------------------------------------------
-
-'use strict'
-
-// npm
-var fs = require('graceful-fs')
+// ----------------------------------------------------------------------------
 
 // local
-var seagull = require('..')
+const seagull = require('..')
+const init = require('../cmd/init.js')
+const build = require('../cmd/build.js')
+const serve = require('../cmd/serve.js')
 
-// ------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------
+// setup
 
-// use either the filename passed in, or the default 'config.json' for the config
-var configFilename = process.argv[2] || 'config.json'
+const command = {
+  init,
+  build,
+  serve,
+}
 
-// read the config file
-fs.readFile(configFilename, 'utf8', function(errReadFile, data) {
-  if (errReadFile) {
-    /* eslint no-process-exit: 0 */
-    console.warn('Error opening file: ' + errReadFile)
-    process.exit(2)
+// ----------------------------------------------------------------------------
+// run
+
+const cmd = process.argv[2]
+
+if (cmd in command) {
+  command[cmd](process.argv.slice(3))
+}
+else {
+  if (cmd) {
+    console.warn(`seagull: unknown command: '${cmd}'`)
   }
-
-  var cfg
-  try {
-    cfg = JSON.parse(data)
+  else {
+    console.warn(`seagull: provide a command`)
   }
-  catch (errJsonParse) {
-    /* eslint no-process-exit: 0 */
-    console.warn('Error parsing config: ' + errJsonParse)
-    process.exit(2)
-  }
+  process.exit(2)
+}
 
-  // pass the config to seagull
-  seagull(cfg, function(err) {
-    if (err) throw err
-    console.log('Finished')
-  })
-})
-
-// ------------------------------------------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------

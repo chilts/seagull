@@ -5,6 +5,21 @@ functionality and it does it well.
 
 Make some posts, make some pages or other types of page, run this program and you've got a static site.
 
+## Getting Started ##
+
+Your first site is only a few commands away:
+
+```
+$ npm install -g seagull
+$ mkdir mysite
+$ cd mysite
+$ seagull init
+$ seagull build
+$ seagull serve
+```
+
+Bam! Open http://localhost:3000 and you'll be able to click around.
+
 ## Layout ##
 
 ```
