@@ -48,7 +48,8 @@ function seagull (opts, callback) {
     view: {}, // the Jade functions for views
     file: {}, // the raw     { '/about.md' : 'file contents' }
     page: {}, // the pages : { '/about' : { ...etc... } } // no hierarchy yet (e.g. no '/blog/', just '/blog/post.md'
-    site: {} // the site  : { '/' : { 'about' : { ... }}, '/blog/' : { 'first-post' : { ... } }} // with hierarchy
+    site: {}, // the site  : { '/' : { 'about' : { ... }}, '/blog/' : { 'first-post' : { ... } }} // with hierarchy
+    data: {} // the data from the `data/` dir
   }
 
   async.series(

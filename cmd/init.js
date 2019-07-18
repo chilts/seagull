@@ -41,7 +41,7 @@ const index = [
   'block content',
   '  for post in self.posts.slice.reverse().slice(0, 10)',
   '    h2= post.title',
-  '    | !{post.html}',
+  '    div !{post.html}',
   '    p= post.published.toISOString()',
   ''
 ].join('\n')
@@ -52,7 +52,7 @@ const post = [
   'block content',
   '  h2= self.title',
   '  p Author: #{self.author}',
-  '  | !{self.html}',
+  '  div !{self.html}',
   '  p= self.published.toISOString()',
   ''
 ].join('\n')
@@ -76,7 +76,7 @@ const page = [
   'extends layout',
   '',
   'block content',
-  '  | !{self.html}',
+  '  div !{self.html}',
   ''
 ].join('\n')
 

@@ -1,5 +1,5 @@
-http://simple.seagull.127.0.0.1.xip.io/about-us.html
-http://simple.seagull.127.0.0.1.xip.io/closing-this-blog.html
-http://simple.seagull.127.0.0.1.xip.io/first-post.html
-http://simple.seagull.127.0.0.1.xip.io/third-post.html
-http://simple.seagull.127.0.0.1.xip.io/welcome-to-the-new-world.html
+https://simple.seagull.127.0.0.1.xip.io/about-us.html
+https://simple.seagull.127.0.0.1.xip.io/closing-this-blog-4th.html
+https://simple.seagull.127.0.0.1.xip.io/first-post.html
+https://simple.seagull.127.0.0.1.xip.io/third-post.html
+https://simple.seagull.127.0.0.1.xip.io/welcome-to-the-new-world-2nd.html

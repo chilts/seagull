@@ -1,5 +1,5 @@
-http://average.seagull.127.0.0.1.xip.io/about-us.html
-http://average.seagull.127.0.0.1.xip.io/index.html
-http://average.seagull.127.0.0.1.xip.io/blog/closing-this-blog.html
-http://average.seagull.127.0.0.1.xip.io/blog/first-post.html
-http://average.seagull.127.0.0.1.xip.io/blog/welcome-to-the-new-world.html
+https://average.seagull.127.0.0.1.xip.io/about-us.html
+https://average.seagull.127.0.0.1.xip.io/
+https://average.seagull.127.0.0.1.xip.io/blog/closing-this-blog.html
+https://average.seagull.127.0.0.1.xip.io/blog/first-post.html
+https://average.seagull.127.0.0.1.xip.io/blog/welcome-to-the-new-world.html

@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  for post in self.posts.reverse()
+  for post in self.posts.slice().reverse()
     h2= post.title
-    | !{post.html}
+    div !{post.html}
     p= post.published.toISOString()
