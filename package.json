@@ -3,8 +3,16 @@
   "version": "0.12.0",
   "description": "An opinionated static blog generator.",
   "main": "index.js",
+  "homepage": "https://github.com/chilts/seagull",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/chilts/seagull.git"
+  },
   "bin": {
     "seagull": "./bin/seagull.js"
+  },
+  "scripts": {
+    "test": "set -e; standard; for T in empty simple average; do cd test/$T && node ../test.js && cd ../../; done"
   },
   "dependencies": {
     "async": "^2.6.3",
@@ -23,27 +31,26 @@
     "xtend": "^4.0.2"
   },
   "devDependencies": {
-    "eslint": "^6.0.1",
+    "standard": "^13.0.2",
     "tape": "^4.11.0"
   },
-  "homepage": "https://github.com/chilts/seagull",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/chilts/seagull.git"
-  },
-  "scripts": {
-    "test": "set -e; eslint *.js lib/*.js bin/*.js test/*.js; for T in empty simple average; do cd test/$T && node ../test.js && cd ../../; done"
+  "standard": {
+    "ignore": [
+      "test/empty/",
+      "test/average/",
+      "test/simple/"
+    ]
   },
   "author": {
     "name": "Andrew Chilton",
     "email": "andychilton@gmail.com",
     "url": "https://chilts.org/"
   },
-  "license": "ISC",
   "keywords": [
     "static",
     "site",
     "generator",
     "blog"
-  ]
+  ],
+  "license": "ISC"
 }

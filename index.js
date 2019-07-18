@@ -27,28 +27,28 @@ var renderSite = require('./lib/render-site.js')
 // --------------------------------------------------------------------------------------------------------------------
 
 var DEFAULTS = {
-  postsPerPage   : 10,
-  viewDir        : 'views',
-  contentDir     : 'content',
-  fileDir        : 'files',
-  htmlDir        : 'html',
-  includeDrafts  : false,
-  includeFutures : false,
+  postsPerPage: 10,
+  viewDir: 'views',
+  contentDir: 'content',
+  fileDir: 'files',
+  htmlDir: 'html',
+  includeDrafts: false,
+  includeFutures: false
 }
 
-function seagull(opts, callback) {
+function seagull (opts, callback) {
   fmt.title('seagull(): entry')
 
   var cfg = xtend({}, DEFAULTS, opts)
   console.log('cfg:', cfg)
 
   var ctx = {
-    now  : cfg.published ? new Date(cfg.published) : new Date(), // so all plugins can use exactly the same date
-    cfg  : cfg,
-    view : {}, // the Jade functions for views
-    file : {}, // the raw     { '/about.md' : 'file contents' }
-    page : {}, // the pages : { '/about' : { ...etc... } } // no hierarchy yet (e.g. no '/blog/', just '/blog/post.md'
-    site : {}, // the site  : { '/' : { 'about' : { ... }}, '/blog/' : { 'first-post' : { ... } }} // with hierarchy
+    now: cfg.published ? new Date(cfg.published) : new Date(), // so all plugins can use exactly the same date
+    cfg: cfg,
+    view: {}, // the Jade functions for views
+    file: {}, // the raw     { '/about.md' : 'file contents' }
+    page: {}, // the pages : { '/about' : { ...etc... } } // no hierarchy yet (e.g. no '/blog/', just '/blog/post.md'
+    site: {} // the site  : { '/' : { 'about' : { ... }}, '/blog/' : { 'first-post' : { ... } }} // with hierarchy
   }
 
   async.series(
@@ -66,10 +66,11 @@ function seagull(opts, callback) {
       createArchivePages.bind(null, ctx),
       createAtomFeeds.bind(null, ctx),
       createRssFeeds.bind(null, ctx),
+      // this is where we could dump the data structure
       createOutputDirs.bind(null, ctx),
-      renderSite.bind(null, ctx),
+      renderSite.bind(null, ctx)
     ],
-    function(err) {
+    function (err) {
       console.log('-------------------------------------------------------------------------------')
       console.log('err:', err)
       console.log('ctx:', ctx)

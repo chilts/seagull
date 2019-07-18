@@ -14,15 +14,14 @@ const configFilename = 'config.json'
 // ----------------------------------------------------------------------------
 // build
 
-function build(args) {
+function build (args) {
   // read the config file
   const data = fs.readFileSync(configFilename, 'utf8')
 
   let cfg
   try {
     cfg = JSON.parse(data)
-  }
-  catch (errJsonParse) {
+  } catch (errJsonParse) {
     /* eslint no-process-exit: 0 */
     console.warn('Error parsing config: ' + errJsonParse)
     process.exit(2)
@@ -33,7 +32,6 @@ function build(args) {
     if (err) throw err
     console.log('Finished')
   })
-
 }
 
 // ----------------------------------------------------------------------------

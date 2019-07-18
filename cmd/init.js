@@ -32,7 +32,7 @@ const layout = [
   '      block content',
   '',
   '    footer(style="text-align:center;border-top:2px solid #ccc;background-color:#eee;padding:16px;") &copy; #{cfg.domain} 2019',
-  '',
+  ''
 ].join('\n')
 
 const index = [
@@ -43,7 +43,7 @@ const index = [
   '    h2= post.title',
   '    | !{post.html}',
   '    p= post.published.toISOString()',
-  '',
+  ''
 ].join('\n')
 
 const post = [
@@ -54,7 +54,7 @@ const post = [
   '  p Author: #{self.author}',
   '  | !{self.html}',
   '  p= self.published.toISOString()',
-  '',
+  ''
 ].join('\n')
 
 const archive = [
@@ -64,12 +64,12 @@ const archive = [
   '  ul',
   '    for post in self.posts.slice().reverse()',
   '      li',
-  '        a(href=`${post.name}.html`) #{post.title}',
+  '        a(href=`' + '${' + 'post.name' + '}.html' + '`) #{post.title}',
   '        |',
   '        | (',
   '        span= post.published.toISOString()',
   '        | )',
-  '',
+  ''
 ].join('\n')
 
 const page = [
@@ -77,7 +77,7 @@ const page = [
   '',
   'block content',
   '  | !{self.html}',
-  '',
+  ''
 ].join('\n')
 
 const content = [
@@ -88,7 +88,7 @@ const content = [
   'Congatulations! You have built your first **Seagull** website.',
   '',
   'See the [Seagull Rocks](https://seagull.rocks) website for more info.',
-  '',
+  ''
 ].join('\n')
 
 const about = [
@@ -99,14 +99,14 @@ const about = [
   'Seagull is a static site generator.',
   '',
   'It looks like you\'re already doing well so far. :)',
-  '',
+  ''
 ].join('\n')
 
 const first = [
   '{"type":"post","title":"First Post","published": "1971-01-01T12:13:14.000Z"}',
   '---',
   'This is your __first__ post!',
-  '',
+  ''
 ].join('\n')
 
 const second = [
@@ -115,13 +115,13 @@ const second = [
   '* a list',
   '* of three',
   '* items',
-  '',
+  ''
 ].join('\n')
 
 // ----------------------------------------------------------------------------
 // init
 
-function init(args) {
+function init (args) {
   fs.writeFileSync('config.json', '{"title":"Example","domain":"example.com"}', 'utf8')
   fs.mkdirSync('content', { recursive: true })
   fs.mkdirSync('content/blog', { recursive: true })

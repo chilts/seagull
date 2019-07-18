@@ -2,7 +2,6 @@
 // ----------------------------------------------------------------------------
 
 // local
-const seagull = require('..')
 const init = require('../cmd/init.js')
 const build = require('../cmd/build.js')
 const serve = require('../cmd/serve.js')
@@ -13,7 +12,7 @@ const serve = require('../cmd/serve.js')
 const command = {
   init,
   build,
-  serve,
+  serve
 }
 
 // ----------------------------------------------------------------------------
@@ -23,12 +22,10 @@ const cmd = process.argv[2]
 
 if (cmd in command) {
   command[cmd](process.argv.slice(3))
-}
-else {
+} else {
   if (cmd) {
     console.warn(`seagull: unknown command: '${cmd}'`)
-  }
-  else {
+  } else {
     console.warn(`seagull: provide a command`)
   }
   process.exit(2)

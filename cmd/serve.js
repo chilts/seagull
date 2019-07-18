@@ -1,7 +1,6 @@
 // ----------------------------------------------------------------------------
 
 // core
-const fs = require('graceful-fs')
 const http = require('http')
 
 // npm
@@ -11,9 +10,9 @@ const serveStatic = require('serve-static')
 // ----------------------------------------------------------------------------
 // serve
 
-function serve(args) {
+function serve (args) {
   // Serve up public/ftp folder
-  const serve = serveStatic('html', { 'index': ['index.html', 'index.htm'] })
+  const serve = serveStatic('html', { index: ['index.html', 'index.htm'] })
 
   // Create server
   const server = http.createServer()
