@@ -19,6 +19,7 @@ var createIndexPages = require('./lib/create-index-pages.js')
 var createArchivePages = require('./lib/create-archive-pages.js')
 var createCategoryPages = require('./lib/create-category-pages.js')
 var createTagPages = require('./lib/create-tag-pages.js')
+var createAuthorPages = require('./lib/create-author-pages.js')
 var createSitemap = require('./lib/create-sitemap.js')
 var processPosts = require('./lib/process-posts.js')
 var createAtomFeeds = require('./lib/create-atom-feeds.js')
@@ -69,6 +70,7 @@ function seagull (opts, callback) {
       createArchivePages.bind(null, ctx),
       createCategoryPages.bind(null, ctx),
       createTagPages.bind(null, ctx),
+      createAuthorPages.bind(null, ctx),
       createAtomFeeds.bind(null, ctx),
       createRssFeeds.bind(null, ctx),
       // this is where we could dump the data structure
