@@ -9,8 +9,8 @@ var fmt = require('fmt')
 
 // plugins
 var loadUpPugViews = require('./lib/load-up-pug-views.js')
-var cleanHtmlDir = require('./lib/clean-html-dir.js')
-var copyStaticFilesToHtml = require('./lib/copy-static-files-to-html.js')
+var cleanDistDir = require('./lib/clean-dist-dir.js')
+var copyStaticFilesToDist = require('./lib/copy-static-files-to-dist.js')
 var readAllContent = require('./lib/read-all-content.js')
 var readAllData = require('./lib/read-all-data.js')
 var processContentToPages = require('./lib/process-content-to-pages.js')
@@ -35,8 +35,8 @@ var DEFAULTS = {
   viewDir: 'views',
   contentDir: 'content',
   dataDir: 'data',
-  fileDir: 'files',
-  htmlDir: 'html',
+  staticDir: 'static',
+  distDir: 'dist',
   includeDrafts: false,
   includeFutures: false
 }
@@ -59,8 +59,8 @@ function seagull (opts, callback) {
 
   async.series(
     [
-      cleanHtmlDir.bind(null, ctx),
-      copyStaticFilesToHtml.bind(null, ctx),
+      cleanDistDir.bind(null, ctx),
+      copyStaticFilesToDist.bind(null, ctx),
       readAllContent.bind(null, ctx),
       readAllData.bind(null, ctx),
       processContentToPages.bind(null, ctx),

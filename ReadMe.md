@@ -25,8 +25,8 @@ Bam! Open http://localhost:3000 and you'll be able to click around.
 ```
 ├── config.json
 ├── content
-├── files
-├── html
+├── static
+├── dist
 └── views
 ```
 
