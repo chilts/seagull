@@ -13,7 +13,7 @@ var seagull = require('..')
 
 // --------------------------------------------------------------------------------------------------------------------
 
-test('rebuild the average site', function (t) {
+test('rebuild this site', function (t) {
   // use either the filename passed in, or the default 'config.json' for the config
   var configFilename = 'config.json'
 

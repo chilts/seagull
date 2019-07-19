@@ -12,7 +12,7 @@
     "seagull": "./bin/seagull.js"
   },
   "scripts": {
-    "test": "set -e; standard; for T in empty simple average; do cd test/$T && node ../test.js && cd ../../; done"
+    "test": "set -e; standard; for T in empty simple average blah; do cd test/$T && node ../test.js && cd ../../; done"
   },
   "dependencies": {
     "async": "^2.6.3",

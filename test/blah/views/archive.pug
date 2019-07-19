@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  ul
+    for post in self.posts
+      li
+        a(href=`${post.name}.html`) #{post.title}
+        |
+        | (
+        span= post.published.toISOString()
+        | )

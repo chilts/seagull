@@ -1,0 +1,25 @@
+doctype html
+html(lang="en")
+
+  head
+    meta(charset="utf-8")
+    meta(http-equiv="X-UA-Compatible" content="IE=edge")
+    meta(name="viewport" content="width=device-width, initial-scale=1")
+    meta(name="description" content="The easy way to create a lovely blog")
+    meta(name="author" content=cfg.author)
+    link(rel="icon" href="/favicon.ico")
+
+    title= self.title || cfg.title
+
+  body(style="margin:0;padding:0;")
+    nav(style="background-color:#ddd;padding:8px;")
+      a(style="margin:0 8px;" href="/") Home
+      a(style="margin:0 8px;" href="/blog/") Blog
+      a(style="margin:0 8px;" href="/blog/archive.html") Archive
+      a(style="margin:0 8px;" href="/about.html") About
+
+    div(style="padding:16px;")
+      h1= self.title
+      block content
+
+    footer(style="text-align:center;border-top:2px solid #ccc;background-color:#eee;padding:16px;") &copy; #{cfg.domain} 2019
