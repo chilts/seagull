@@ -12,6 +12,7 @@ var loadUpPugViews = require('./lib/load-up-pug-views.js')
 var cleanHtmlDir = require('./lib/clean-html-dir.js')
 var copyStaticFilesToHtml = require('./lib/copy-static-files-to-html.js')
 var readAllContent = require('./lib/read-all-content.js')
+var readAllData = require('./lib/read-all-data.js')
 var processContentToPages = require('./lib/process-content-to-pages.js')
 var createSiteStructure = require('./lib/create-site-structure.js')
 var convertMarkdownToHtml = require('./lib/convert-markdown-to-html.js')
@@ -33,6 +34,7 @@ var DEFAULTS = {
   postsPerPage: 10,
   viewDir: 'views',
   contentDir: 'content',
+  dataDir: 'data',
   fileDir: 'files',
   htmlDir: 'html',
   includeDrafts: false,
@@ -60,6 +62,7 @@ function seagull (opts, callback) {
       cleanHtmlDir.bind(null, ctx),
       copyStaticFilesToHtml.bind(null, ctx),
       readAllContent.bind(null, ctx),
+      readAllData.bind(null, ctx),
       processContentToPages.bind(null, ctx),
       loadUpPugViews.bind(null, ctx),
       createSiteStructure.bind(null, ctx),
