@@ -1,26 +1,15 @@
 // --------------------------------------------------------------------------------------------------------------------
 
-'use strict'
-
-// core
-var fs = require('fs')
-
 // npm
-var test = require('tape')
+const test = require('tape')
 
 // local
-var seagull = require('..')
+const cfg = require('../lib/cfg.js')
+const seagull = require('..')
 
 // --------------------------------------------------------------------------------------------------------------------
 
 test('rebuild this site', function (t) {
-  // use either the filename passed in, or the default 'config.json' for the config
-  var configFilename = 'config.json'
-
-  // read the config file
-  var cfg = fs.readFileSync(configFilename, 'utf8')
-  cfg = JSON.parse(cfg)
-
   // pass the config to seagull
   seagull(cfg, function (err) {
     t.plan(2)

@@ -30,9 +30,17 @@ var renderSite = require('./lib/render-site.js')
 // --------------------------------------------------------------------------------------------------------------------
 
 function seagull (cfg, callback) {
-  fmt.title('seagull(): entry')
+  fmt.arrow('Seagull')
+  fmt.msg('Static site generator. Fast, powerful, simple. Choose all three.', true)
+  fmt.spacer()
+  fmt.msg('Config:', true)
+  Object.keys(cfg).forEach(key => {
+    fmt.li(`${key} = ${cfg[key]}`, true)
+  })
+  fmt.spacer()
 
-  var ctx = {
+  // create the context to use throughout the build
+  const ctx = {
     now: cfg.published ? new Date(cfg.published) : new Date(), // so all plugins can use exactly the same date
     cfg: cfg,
     view: {}, // the Jade functions for views
