@@ -10,9 +10,9 @@ const serveStatic = require('serve-static')
 // ----------------------------------------------------------------------------
 // serve
 
-function serve (args) {
+function serve (cfg, args) {
   // Serve up public/ftp folder
-  const serve = serveStatic('html', { index: ['index.html', 'index.htm'] })
+  const serve = serveStatic(cfg.distDir, { index: ['index.html', 'index.htm'] })
 
   // Create server
   const server = http.createServer()

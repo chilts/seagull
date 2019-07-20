@@ -121,33 +121,33 @@ const second = [
 // ----------------------------------------------------------------------------
 // init
 
-function init (args) {
+function init (cfg, args) {
   fs.writeFileSync('config.json', '{"title":"Example","domain":"example.com"}', 'utf8')
-  fs.mkdirSync('content', { recursive: true })
-  fs.mkdirSync('content/blog', { recursive: true })
-  fs.mkdirSync('files', { recursive: true })
-  fs.mkdirSync('html', { recursive: true })
-  fs.mkdirSync('views', { recursive: true })
+  fs.mkdirSync(cfg.viewDir, { recursive: true })
+  fs.mkdirSync(`${cfg.contentDir}/blog`, { recursive: true })
+  fs.mkdirSync(cfg.dataDir, { recursive: true })
+  fs.mkdirSync(cfg.staticDir, { recursive: true })
+  fs.mkdirSync(cfg.distDir, { recursive: true })
 
   // now add some content
-  fs.writeFileSync('views/layout.pug', layout, 'utf8')
-  fs.writeFileSync('views/index.pug', index, 'utf8')
-  fs.writeFileSync('views/post.pug', post, 'utf8')
-  fs.writeFileSync('views/archive.pug', archive, 'utf8')
-  fs.writeFileSync('views/page.pug', page, 'utf8')
+  fs.writeFileSync(`${cfg.viewDir}/layout.pug`, layout, 'utf8')
+  fs.writeFileSync(`${cfg.viewDir}/index.pug`, index, 'utf8')
+  fs.writeFileSync(`${cfg.viewDir}/post.pug`, post, 'utf8')
+  fs.writeFileSync(`${cfg.viewDir}/archive.pug`, archive, 'utf8')
+  fs.writeFileSync(`${cfg.viewDir}/page.pug`, page, 'utf8')
 
   // add some views
-  fs.writeFileSync('content/index.md', content, 'utf8')
-  fs.writeFileSync('content/about.md', about, 'utf8')
-  fs.writeFileSync('content/blog/first-post.md', first, 'utf8')
-  fs.writeFileSync('content/blog/second-post.md', second, 'utf8')
+  fs.writeFileSync(`${cfg.contentDir}/index.md`, content, 'utf8')
+  fs.writeFileSync(`${cfg.contentDir}/about.md`, about, 'utf8')
+  fs.writeFileSync(`${cfg.contentDir}/blog/first-post.md`, first, 'utf8')
+  fs.writeFileSync(`${cfg.contentDir}/blog/second-post.md`, second, 'utf8')
 
   console.log('')
   console.log('Success. Now run:')
   console.log('')
   console.log('  $ seagull build')
   console.log('')
-  console.log('Then take a look inside your `html/` directory.')
+  console.log(`Then take a look inside your \`${cfg.distDir}\` directory.`)
   console.log('')
 }
 

@@ -4,7 +4,6 @@
 
 // npm
 var async = require('async')
-var xtend = require('xtend')
 var fmt = require('fmt')
 
 // plugins
@@ -30,22 +29,8 @@ var renderSite = require('./lib/render-site.js')
 
 // --------------------------------------------------------------------------------------------------------------------
 
-var DEFAULTS = {
-  postsPerPage: 10,
-  viewDir: 'views',
-  contentDir: 'content',
-  dataDir: 'data',
-  staticDir: 'static',
-  distDir: 'dist',
-  includeDrafts: false,
-  includeFutures: false
-}
-
-function seagull (opts, callback) {
+function seagull (cfg, callback) {
   fmt.title('seagull(): entry')
-
-  var cfg = xtend({}, DEFAULTS, opts)
-  console.log('cfg:', cfg)
 
   var ctx = {
     now: cfg.published ? new Date(cfg.published) : new Date(), // so all plugins can use exactly the same date
