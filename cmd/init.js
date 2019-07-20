@@ -28,7 +28,6 @@ const layout = [
   '      a(style="margin:0 8px;" href="/about.html") About',
   '',
   '    div(style="padding:16px;")',
-  '      h1= self.title',
   '      block content',
   '',
   '    footer(style="text-align:center;border-top:2px solid #ccc;background-color:#eee;padding:16px;") &copy; #{cfg.domain} 2019',
