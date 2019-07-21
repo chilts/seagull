@@ -74,10 +74,15 @@ function seagull (cfg, callback) {
       renderSite.bind(null, ctx)
     ],
     function (err) {
-      console.log('-------------------------------------------------------------------------------')
-      console.log('err:', err)
-      console.log('ctx:', ctx)
-      console.log('-------------------------------------------------------------------------------')
+      fmt.arrow('Congratulations!')
+      fmt.spacer()
+      fmt.msg('Now run the following to run a local server:', true)
+      fmt.spacer()
+      fmt.msg('    $ seagull serve', true)
+      fmt.spacer()
+      fmt.msg('Then open http://localhost:3000 to check your newly built site.', true)
+      fmt.spacer()
+      fmt.arrow('Finished')
       callback(err)
     }
   )
