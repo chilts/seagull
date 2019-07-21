@@ -30,6 +30,10 @@ const renderSite = require('./lib/process/render-site.js')
 // --------------------------------------------------------------------------------------------------------------------
 
 function seagull (opts, cfg, callback) {
+  if (opts.stream) {
+    fmt.setStream(opts.stream)
+  }
+
   fmt.arrow('Seagull')
   fmt.msg('Static site generator. Fast, powerful, simple. Choose all three.', true)
   fmt.spacer()
