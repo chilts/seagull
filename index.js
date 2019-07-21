@@ -1,31 +1,29 @@
 // --------------------------------------------------------------------------------------------------------------------
 
-'use strict'
-
 // npm
-var async = require('async')
-var fmt = require('fmt')
+const async = require('async')
+const fmt = require('fmt')
 
 // plugins
-var loadUpPugViews = require('./lib/load-up-pug-views.js')
-var cleanDistDir = require('./lib/clean-dist-dir.js')
-var copyStaticFilesToDist = require('./lib/copy-static-files-to-dist.js')
-var readAllContent = require('./lib/read-all-content.js')
-var readAllData = require('./lib/read-all-data.js')
-var processContentToPages = require('./lib/process-content-to-pages.js')
-var createSiteStructure = require('./lib/create-site-structure.js')
-var convertMarkdownToHtml = require('./lib/convert-markdown-to-html.js')
-var createIndexPages = require('./lib/create-index-pages.js')
-var createArchivePages = require('./lib/create-archive-pages.js')
-var createCategoryPages = require('./lib/create-category-pages.js')
-var createTagPages = require('./lib/create-tag-pages.js')
-var createAuthorPages = require('./lib/create-author-pages.js')
-var createSitemap = require('./lib/create-sitemap.js')
-var processPosts = require('./lib/process-posts.js')
-var createAtomFeeds = require('./lib/create-atom-feeds.js')
-var createRssFeeds = require('./lib/create-rss-feeds.js')
-var createOutputDirs = require('./lib/create-output-dirs.js')
-var renderSite = require('./lib/render-site.js')
+const loadUpPugViews = require('./lib/process/load-up-pug-views.js')
+const cleanDistDir = require('./lib/process/clean-dist-dir.js')
+const copyStaticFilesToDist = require('./lib/process/copy-static-files-to-dist.js')
+const readAllContent = require('./lib/process/read-all-content.js')
+const readAllData = require('./lib/process/read-all-data.js')
+const processContentToPages = require('./lib/process/process-content-to-pages.js')
+const createSiteStructure = require('./lib/process/create-site-structure.js')
+const convertMarkdownToHtml = require('./lib/process/convert-markdown-to-html.js')
+const createIndexPages = require('./lib/process/create-index-pages.js')
+const createArchivePages = require('./lib/process/create-archive-pages.js')
+const createCategoryPages = require('./lib/process/create-category-pages.js')
+const createTagPages = require('./lib/process/create-tag-pages.js')
+const createAuthorPages = require('./lib/process/create-author-pages.js')
+const createSitemap = require('./lib/process/create-sitemap.js')
+const processPosts = require('./lib/process/process-posts.js')
+const createAtomFeeds = require('./lib/process/create-atom-feeds.js')
+const createRssFeeds = require('./lib/process/create-rss-feeds.js')
+const createOutputDirs = require('./lib/process/create-output-dirs.js')
+const renderSite = require('./lib/process/render-site.js')
 
 // --------------------------------------------------------------------------------------------------------------------
 
