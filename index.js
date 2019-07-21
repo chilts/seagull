@@ -10,7 +10,7 @@ const cleanDistDir = require('./lib/process/clean-dist-dir.js')
 const copyStaticFilesToDist = require('./lib/process/copy-static-files-to-dist.js')
 const readAllContent = require('./lib/process/read-all-content.js')
 const readAllData = require('./lib/process/read-all-data.js')
-const processContentToPages = require('./lib/process/process-content-to-pages.js')
+const processContentToSite = require('./lib/process/process-content-to-site.js')
 const createSiteStructure = require('./lib/process/create-site-structure.js')
 const convertMarkdownToHtml = require('./lib/process/convert-markdown-to-html.js')
 const createIndexPages = require('./lib/process/create-index-pages.js')
@@ -54,7 +54,7 @@ function seagull (cfg, callback) {
       copyStaticFilesToDist.bind(null, ctx),
       readAllContent.bind(null, ctx),
       readAllData.bind(null, ctx),
-      processContentToPages.bind(null, ctx),
+      processContentToSite.bind(null, ctx),
       loadUpPugViews.bind(null, ctx),
       createSiteStructure.bind(null, ctx),
       createSitemap.bind(null, ctx),
