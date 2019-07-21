@@ -2,7 +2,9 @@
 
 // npm
 const async = require('async')
-const fmt = require('fmt')
+
+// local
+const fmt = require('./lib/fmt.js')
 
 // plugins
 const loadUpPugViews = require('./lib/process/load-up-pug-views.js')
