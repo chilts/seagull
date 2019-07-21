@@ -10,7 +10,7 @@ const serveStatic = require('serve-static')
 // ----------------------------------------------------------------------------
 // serve
 
-function serve (cfg, args) {
+function serve (opts, cfg, args) {
   // Serve up public/ftp folder
   const serve = serveStatic(cfg.distDir, { index: ['index.html', 'index.htm'] })
 

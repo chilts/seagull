@@ -6,9 +6,9 @@ const seagull = require('..')
 // ----------------------------------------------------------------------------
 // build
 
-function build (cfg, args) {
-  // pass the config to seagull
-  seagull(cfg, err => {
+function build (opts, cfg, args) {
+  // pass the opts and config to seagull
+  seagull(opts, cfg, err => {
     if (err) throw err
   })
 }

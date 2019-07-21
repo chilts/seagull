@@ -19,10 +19,11 @@ const command = {
 // ----------------------------------------------------------------------------
 // run
 
+const opts = {}
 const cmd = process.argv[2]
 
 if (cmd in command) {
-  command[cmd](cfg, process.argv.slice(3))
+  command[cmd](opts, cfg, process.argv.slice(3))
 } else {
   if (cmd) {
     console.warn(`seagull: unknown command: '${cmd}'`)

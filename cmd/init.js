@@ -120,7 +120,7 @@ const second = [
 // ----------------------------------------------------------------------------
 // init
 
-function init (cfg, args) {
+function init (opts, cfg, args) {
   fs.writeFileSync('config.json', '{"title":"Example","domain":"example.com"}', 'utf8')
   fs.mkdirSync(cfg.viewDir, { recursive: true })
   fs.mkdirSync(`${cfg.contentDir}/blog`, { recursive: true })
