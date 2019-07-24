@@ -6,6 +6,7 @@ const cfg = require('../lib/cfg.js')
 const init = require('../cmd/init.js')
 const build = require('../cmd/build.js')
 const serve = require('../cmd/serve.js')
+const watch = require('../cmd/watch.js')
 
 // ----------------------------------------------------------------------------
 // setup
@@ -13,7 +14,8 @@ const serve = require('../cmd/serve.js')
 const command = {
   init,
   build,
-  serve
+  serve,
+  watch
 }
 
 // ----------------------------------------------------------------------------
