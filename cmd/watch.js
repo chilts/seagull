@@ -10,7 +10,6 @@ const fmt = require('../lib/fmt.js')
 // ----------------------------------------------------------------------------
 // watch
 
-
 function watch (opts, cfg, args) {
   function build () {
     // pass the opts and config to seagull
@@ -28,7 +27,7 @@ function watch (opts, cfg, args) {
   const watchPaths = ['config.json', cfg.contentDir, cfg.dataDir, cfg.staticDir, cfg.viewDir]
 
   const watcher = chokidar.watch(watchPaths, {
-    ignoreInitial: true,
+    ignoreInitial: true
   })
 
   watcher.on('ready', () => {

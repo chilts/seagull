@@ -8,7 +8,7 @@ const test = require('tape')
 
 // local
 const cfg = require('../lib/cfg.js')
-const seagull = require('..')
+const seagull = require('../lib/seagull.js')
 
 // --------------------------------------------------------------------------------------------------------------------
 
