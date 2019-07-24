@@ -5,6 +5,7 @@ const chokidar = require('chokidar')
 
 // local
 const seagull = require('../lib/seagull.js')
+const fmt = require('../lib/fmt.js')
 
 // ----------------------------------------------------------------------------
 // watch
@@ -15,6 +16,11 @@ function watch (opts, cfg, args) {
     // pass the opts and config to seagull
     seagull(opts, cfg, err => {
       if (err) throw err
+      console.log()
+      console.log('-------------------------------------------------------------------------------')
+      console.log()
+      fmt.arrow('Watching ...')
+      console.log()
     })
   }
 
@@ -26,22 +32,26 @@ function watch (opts, cfg, args) {
   })
 
   watcher.on('ready', () => {
-    console.log('Initial scan complete ... watching ...')
+    fmt.msg('Initial scan complete ... watching ...')
+    fmt.spacer()
     build()
   })
 
   watcher.on('add', path => {
-    console.log(`Added ${path}`)
+    fmt.msg(`Added ${path}`)
+    fmt.spacer()
     build()
   })
 
   watcher.on('change', path => {
-    console.log(`Changed ${path}`)
+    fmt.msg(`Changed ${path}`)
+    fmt.spacer()
     build()
   })
 
   watcher.on('unlink', path => {
-    console.log(`Removed ${path}`)
+    fmt.msg(`Removed ${path}`)
+    fmt.spacer()
     build()
   })
 
