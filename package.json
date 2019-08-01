@@ -1,6 +1,6 @@
 {
   "name": "seagull",
-  "version": "0.30.0",
+  "version": "0.40.0",
   "description": "Static site generator. Fast, powerfull, simple. Choose all three.",
   "homepage": "https://github.com/chilts/seagull",
   "repository": {
