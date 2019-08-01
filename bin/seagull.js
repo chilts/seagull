@@ -7,6 +7,7 @@ const init = require('../cmd/init.js')
 const build = require('../cmd/build.js')
 const serve = require('../cmd/serve.js')
 const watch = require('../cmd/watch.js')
+const version = require('../cmd/version.js')
 
 // ----------------------------------------------------------------------------
 // setup
@@ -15,7 +16,8 @@ const command = {
   init,
   build,
   serve,
-  watch
+  watch,
+  version
 }
 
 // ----------------------------------------------------------------------------
