@@ -32,7 +32,7 @@ if (cmd in command) {
   if (cmd) {
     console.warn(`seagull: unknown command: '${cmd}'`)
   } else {
-    console.warn(`seagull: provide a command`)
+    console.warn('seagull: provide a command')
   }
   process.exit(2)
 }
