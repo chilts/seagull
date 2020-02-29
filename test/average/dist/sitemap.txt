@@ -1,5 +1,4 @@
 https://average.seagull.127.0.0.1.xip.io/about-us.html
-https://average.seagull.127.0.0.1.xip.io/future-page.html
 https://average.seagull.127.0.0.1.xip.io/
 https://average.seagull.127.0.0.1.xip.io/blog/closing-this-blog.html
 https://average.seagull.127.0.0.1.xip.io/blog/first-post.html
