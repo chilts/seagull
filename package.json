@@ -12,7 +12,7 @@
   },
   "scripts": {
     "standard-fix": "standard --fix",
-    "test": "set -e; standard; for T in empty simple average complex; do cd test/$T && node ../../bin/seagull.js build && cd ../../; done"
+    "test": "set -e; standard; for T in empty simple average complex; do cd test/$T && node ../test.js && cd ../../; done"
   },
   "dependencies": {
     "async": "^2.6.3",
@@ -30,7 +30,8 @@
     "read-dir-files": "^0.1.1",
     "serve-static": "^1.14.1",
     "slugit": "^1.1.0",
-    "xtend": "^4.0.2"
+    "xtend": "^4.0.2",
+    "yargs": "^15.1.0"
   },
   "devDependencies": {
     "standard": "^14.3.1",

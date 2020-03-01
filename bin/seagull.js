@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 // ----------------------------------------------------------------------------
 
+// npm
+const yargs = require('yargs')
+
 // local
-const cfg = require('../lib/cfg.js')
+const config = require('../lib/config.js')
 const init = require('../cmd/init.js')
 const build = require('../cmd/build.js')
 const serve = require('../cmd/serve.js')
@@ -12,6 +15,8 @@ const version = require('../cmd/version.js')
 // ----------------------------------------------------------------------------
 // setup
 
+const args = yargs.argv
+
 const command = {
   init,
   build,
@@ -20,21 +25,37 @@ const command = {
   version
 }
 
+const loadConfig = {
+  init: false,
+  build: true,
+  serve: true,
+  watch: true,
+  version: false
+}
+
 // ----------------------------------------------------------------------------
 // run
 
-const opts = {}
-const cmd = process.argv[2]
-
-if (cmd in command) {
-  command[cmd](opts, cfg, process.argv.slice(3))
-} else {
-  if (cmd) {
-    console.warn(`seagull: unknown command: '${cmd}'`)
-  } else {
-    console.warn('seagull: provide a command')
-  }
-  process.exit(2)
+const opts = {
+  // ToDo: ... !!!
 }
+const configFilename = args.config || args.c || 'seagull.json'
+const cmd = args._[0]
+
+// read the config file
+;(async function () {
+  const cfg = await config.load(configFilename, !loadConfig[cmd])
+
+  if (cmd in command) {
+    await command[cmd](opts, cfg, args._.slice(1))
+  } else {
+    if (cmd) {
+      console.warn(`seagull: unknown command: '${cmd}'`)
+    } else {
+      console.warn('seagull: provide a command')
+    }
+    process.exit(2)
+  }
+})()
 
 // ----------------------------------------------------------------------------

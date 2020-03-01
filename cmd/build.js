@@ -6,11 +6,10 @@ const seagull = require('../lib/seagull.js')
 // ----------------------------------------------------------------------------
 // build
 
-function build (opts, cfg, args) {
-  // pass the opts and config to seagull
-  seagull(opts, cfg, err => {
-    if (err) throw err
-  })
+async function build (opts, cfg, args) {
+  console.log('right here')
+  // pass the `opts` and `cfg` to seagull (`seagull()` does nothing with `args`)
+  return seagull(opts, cfg)
 }
 
 // ----------------------------------------------------------------------------

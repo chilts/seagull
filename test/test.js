@@ -7,22 +7,27 @@ const fs = require('fs')
 const test = require('tape')
 
 // local
-const cfg = require('../lib/cfg.js')
+const config = require('../lib/config.js')
 const seagull = require('../lib/seagull.js')
 
 // --------------------------------------------------------------------------------------------------------------------
 
-test('rebuild this site', function (t) {
-  const opts = {
-    stream: fs.createWriteStream('/dev/null')
-  }
+test('rebuild this site', async function (t) {
+  try {
+    t.plan(1)
 
-  // pass the config to seagull
-  seagull(opts, cfg, function (err) {
-    t.plan(2)
-    t.ok(!err, 'No error occurred when building the site')
+    const opts = {
+      stream: fs.createWriteStream('/dev/null')
+    }
+    const cfg = await config.load('seagull.json')
+
+    // pass the config to seagull
+    await seagull(opts, cfg)
     t.pass('Site built without error')
-  })
+    t.end()
+  } catch (err) {
+    t.fail('Error occurred when loading the config file')
+  }
 })
 
 // --------------------------------------------------------------------------------------------------------------------
