@@ -15,7 +15,7 @@
     "test": "set -e; standard; for T in empty simple average complex; do cd test/$T && node ../test.js && cd ../../; done"
   },
   "dependencies": {
-    "async": "^2.6.3",
+    "async": "^3.2.2",
     "chokidar": "^3.3.1",
     "data2xml": "^1.3.4",
     "date-fns": "^1.30.1",
